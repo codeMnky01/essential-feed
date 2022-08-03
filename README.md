@@ -50,6 +50,124 @@ So i can always enjoy cached images while offline
 ```
 
 ## Use Cases
+### Load Feed from Remote - Use Case
+Data: 
+- URL
+##### Primary course (happy path):
+1. Execute "Load Image Feed" command with above data
+2. System downloads data from URL
+3. System validates downloaded data
+4. System creates image feed from valid data
+5. System delivers image feed
+
+##### Invalid data - error course (sad path):
+1. System delivers invalid data error
+
+##### No connection - error course (sad path):
+1. System delivers no connection error
+---
+
+### Load Image data from Remote - Use Case
+Data: 
+- URL
+##### Primary course (happy path):
+1. Execute "Load Image Data" command with above data
+2. System downloads data from URL
+3. System validates downloaded data
+4. System delivers image feed
+
+##### Cancel course:
+1. System dosn't delivers image nor error
+
+##### Invalid data - error course (sad path):
+1. System delivers invalid data error
+
+##### No connection - error course (sad path):
+1. System delivers no connection error
+---
+
+### Load Feed from Cache - Use Case
+Data: 
+- URL
+##### Primary course (happy path):
+1. Execute "Load Image Feed" command with above data
+2. System retrieves image feed data from cache
+3. System validates cache is less then 7 days old
+4. System creates image feed from valid data
+5. System delivers image feed
+
+##### Retrieval error course (sad path):
+1. System delivers retrieval error
+
+##### Expired cache course (sad path):
+1. System delivers no feed images
+
+##### Empty cache course (sad path):
+1. System delivers no feed images
+---
+
+### Load Image data from Cache - Use Case
+Data: 
+- URL
+##### Primary course (happy path):
+1. Execute "Load Image Data" command with above data
+2. System retrieves image data from cache
+3. System validates cache is less then 7 days old
+4. System delivers image
+
+##### Cancel course:
+1. System doesn't deliver image nor error
+
+##### Retrieval error course (sad path):
+1. System delivers retrieval error
+
+##### Empty cache course (sad path):
+1. System delivers no feed images
+---
+
+### Validate Feed Cache - Use Case
+##### Primary course (happy path):
+Data:
+- Cache
+1. Execute "Validate Cache" command with above data
+2. System retrieves cached data
+3. System validates cache is less then 7 days old
+
+##### Retrieval error course (sad path):
+1. System deletes cache
+
+##### Empty cache course (sad path):
+1. System deletes cache 
+---
+
+### Cache Feed - Use Case
+##### Primary course (happy path):
+Data:
+- Image Feed
+1. Execute "Save Image Feed" command with above data
+2. System deletes old cache
+3. System encodes new image feed
+4. System timestamps encoded image feed
+5. System saves new cached data
+6. System delivers susccess message
+
+##### Deleting error course (sad path):
+1. System delivers error
+
+##### Saving error course (sad path):
+1. System deletes cache 
+---
+
+### Save Image data to Cache - Use Case
+##### Primary course (happy path):
+Data:
+- Image Data
+1. Execute "Save Image Data" command with above data
+2. System saves new cached data
+3. System delivers susccess message
+
+##### Saving error course (sad path):
+1. System deletes cache 
 
 ## UML
 
