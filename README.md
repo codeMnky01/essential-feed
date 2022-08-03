@@ -168,8 +168,10 @@ Data:
 
 ##### Saving error course (sad path):
 1. System deletes cache 
+---
 
-## UML
+## Flowchart
+![Image](flowchart.png)
 
 ## Contract
 
