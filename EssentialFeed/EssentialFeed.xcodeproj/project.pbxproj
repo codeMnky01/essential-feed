@@ -11,6 +11,7 @@
 		550B6FB8289AEEFE0025DB90 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550B6FAD289AEEFE0025DB90 /* EssentialFeed.framework */; };
 		550B6FBD289AEEFE0025DB90 /* EssentialFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550B6FBC289AEEFE0025DB90 /* EssentialFeedTests.swift */; };
 		550B6FBE289AEEFE0025DB90 /* EssentialFeed.h in Headers */ = {isa = PBXBuildFile; fileRef = 550B6FB0289AEEFE0025DB90 /* EssentialFeed.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		550B6FC8289AEF800025DB90 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550B6FC7289AEF800025DB90 /* FeedItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		550B6FB1289AEEFE0025DB90 /* EssentialFeed.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = EssentialFeed.docc; sourceTree = "<group>"; };
 		550B6FB7289AEEFE0025DB90 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		550B6FBC289AEEFE0025DB90 /* EssentialFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedTests.swift; sourceTree = "<group>"; };
+		550B6FC7289AEF800025DB90 /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			children = (
 				550B6FB0289AEEFE0025DB90 /* EssentialFeed.h */,
 				550B6FB1289AEEFE0025DB90 /* EssentialFeed.docc */,
+				550B6FC7289AEF800025DB90 /* FeedItem.swift */,
 			);
 			path = EssentialFeed;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				550B6FC8289AEF800025DB90 /* FeedItem.swift in Sources */,
 				550B6FB2289AEEFE0025DB90 /* EssentialFeed.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -395,6 +399,7 @@
 		550B6FC5289AEEFE0025DB90 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYHBR423E7;
@@ -410,6 +415,7 @@
 		550B6FC6289AEEFE0025DB90 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYHBR423E7;
