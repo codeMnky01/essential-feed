@@ -15,6 +15,7 @@
 		55DD13DE289BCC1200F5BCA6 /* RemoteFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DD13DD289BCC1200F5BCA6 /* RemoteFeedLoaderTests.swift */; };
 		55DD13E1289BE4FC00F5BCA6 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DD13E0289BE4FC00F5BCA6 /* RemoteFeedLoader.swift */; };
 		55E97911289E9B1100FC4E96 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E97910289E9B1100FC4E96 /* HTTPClient.swift */; };
+		55E97913289E9B9200FC4E96 /* FeedItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E97912289E9B9200FC4E96 /* FeedItemsMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		55DD13DD289BCC1200F5BCA6 /* RemoteFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTests.swift; sourceTree = "<group>"; };
 		55DD13E0289BE4FC00F5BCA6 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		55E97910289E9B1100FC4E96 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		55E97912289E9B9200FC4E96 /* FeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			children = (
 				55DD13E0289BE4FC00F5BCA6 /* RemoteFeedLoader.swift */,
 				55E97910289E9B1100FC4E96 /* HTTPClient.swift */,
+				55E97912289E9B9200FC4E96 /* FeedItemsMapper.swift */,
 			);
 			path = "Feed API";
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				55DD13E1289BE4FC00F5BCA6 /* RemoteFeedLoader.swift in Sources */,
 				55E97911289E9B1100FC4E96 /* HTTPClient.swift in Sources */,
 				550B6FCA289AF0100025DB90 /* FeedLoader.swift in Sources */,
+				55E97913289E9B9200FC4E96 /* FeedItemsMapper.swift in Sources */,
 				550B6FC8289AEF800025DB90 /* FeedItem.swift in Sources */,
 				550B6FB2289AEEFE0025DB90 /* EssentialFeed.docc in Sources */,
 			);
