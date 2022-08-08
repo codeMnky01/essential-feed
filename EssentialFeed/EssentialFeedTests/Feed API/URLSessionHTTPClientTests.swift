@@ -33,6 +33,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
     private class URLSessionSpy: URLSession {
         var requestedURLs = [URL]()
         
@@ -42,8 +43,5 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
     }
     
-    private class FakeURLSessionDataTask: URLSessionDataTask {
-        override init() { }
-        
-    }
+    private class FakeURLSessionDataTask: URLSessionDataTask { }
 }
