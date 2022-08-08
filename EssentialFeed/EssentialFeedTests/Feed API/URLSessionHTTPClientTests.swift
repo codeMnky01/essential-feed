@@ -60,11 +60,13 @@ class URLSessionHTTPClientTests: XCTestCase {
         private static var stubs = [URL: Stub]()
         
         private struct Stub {
+            let data: Data?
+            let response: URLResponse?
             let error: Error?
         }
         
-        static func stub(url: URL, error: Error? = nil) {
-            stubs[url] = Stub(error: error)
+        static func stub(url: URL, data: Data? = nil, response: URLResponse? = nil, error: Error? = nil) {
+            stubs[url] = Stub(data: data, response: response, error: error)
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
@@ -80,7 +82,19 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func startLoading() {
-            if let url = request.url, let error = URLProtocolStub.stubs[url]?.error {
+            guard let url = request.url else {
+                return
+            }
+            
+            if let data = URLProtocolStub.stubs[url]?.data {
+                client?.urlProtocol(self, didLoad: data)
+            }
+            
+            if let response = URLProtocolStub.stubs[url]?.response {
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            }
+            
+            if let error = URLProtocolStub.stubs[url]?.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }
             
