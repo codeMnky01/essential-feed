@@ -11,20 +11,7 @@ import EssentialFeed
 class EssentialFeedEndToEndAPITests: XCTestCase {
     
     func test_endToEndServerGETFeedResult_matchesFixedTestData() {
-        let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5c52cdd0b8a045df091d2fff/1548930512083/feed-case-study-test-api-feed.json")!
-        let client = URLSessionHTTPClient()
-        let loader = RemoteFeedLoader(url: url, client: client)
-        
-        let exp = expectation(description: "wait for request completion")
-        var capturedResult: LoadFeedResult?
-        loader.load { result in
-            capturedResult = result
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 3)
-        
-        switch capturedResult {
+        switch getFeedResult() {
         case let .success(items):
             XCTAssertEqual(items[0], item(for: 0))
             XCTAssertEqual(items[1], item(for: 1))
@@ -44,6 +31,23 @@ class EssentialFeedEndToEndAPITests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private func getFeedResult() -> LoadFeedResult? {
+        let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5c52cdd0b8a045df091d2fff/1548930512083/feed-case-study-test-api-feed.json")!
+        let client = URLSessionHTTPClient()
+        let loader = RemoteFeedLoader(url: url, client: client)
+        
+        let exp = expectation(description: "wait for request completion")
+        var capturedResult: LoadFeedResult?
+        loader.load { result in
+            capturedResult = result
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 3)
+        
+        return capturedResult
+    }
     
     private func item(for index: Int) -> FeedItem {
         return FeedItem(
