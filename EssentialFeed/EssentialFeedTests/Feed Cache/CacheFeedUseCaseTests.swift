@@ -44,17 +44,19 @@ class CacheFeedUseCaseTests: XCTestCase {
     
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
+        let items = [uniqueItem(), uniqueItem()]
         
-        sut.save([uniqueItem(), uniqueItem()])
+        sut.save(items)
         
         XCTAssertEqual(store.deleteCachedFeedCallCount, 1)
     }
     
     func test_save_doesNotRequestsInsertOnDeletionError() {
         let (sut, store) = makeSUT()
+        let items = [uniqueItem(), uniqueItem()]
         let deletionError = anyNSError()
         
-        sut.save([uniqueItem(), uniqueItem()])
+        sut.save(items)
         store.completeDeletion(with: deletionError)
         
         XCTAssertEqual(store.insertCallCount, 0)
