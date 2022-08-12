@@ -74,11 +74,16 @@ class URLSessionHTTPClientTests: XCTestCase {
     // MARK: - Helpers
     
     func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
-        let sut = URLSessionHTTPClient()
+        let sut = URLSessionHTTPClient(session: makeEphemeralURLSession())
         trackMemoryLeaks(instance: sut, file: file, line: line)
         return sut
     }
     
+    func makeEphemeralURLSession() -> URLSession {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [URLProtocolStub.self]
+        return URLSession(configuration: configuration)
+    }
     
     func resultValuesFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #filePath, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
         
