@@ -17,7 +17,7 @@ So i can always enjoy newest images of friends
 
 ```
  Given the customer have connectivity
-  When the customer reqeusts to see their feed
+  When the customer requests to see their feed
   Then the app should display latest feed from remote
    And replace cache with new feed
 ```
