@@ -72,7 +72,6 @@ So i can always enjoy cached images while offline
 
 ##### No connection - error course (sad path):
 1. System delivers connectivity error
----
 
 ## Load Feed from Cache - Use Case
 
@@ -95,7 +94,6 @@ So i can always enjoy cached images while offline
 
 ##### Empty cache course (sad path):
 1. System delivers no feed images
----
 
 ## Cache Feed - Use Case
 
@@ -115,7 +113,6 @@ So i can always enjoy cached images while offline
 
 ##### Saving error course (sad path):
 1. System deletes cache 
----
 
 ## Flowchart
 ![Image](flowchart.png)
