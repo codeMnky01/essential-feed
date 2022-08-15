@@ -12,15 +12,15 @@ class EssentialFeedEndToEndAPITests: XCTestCase {
     
     func test_endToEndServerGETFeedResult_matchesFixedTestData() {
         switch getFeedResult() {
-        case let .success(items):
-            XCTAssertEqual(items[0], item(for: 0))
-            XCTAssertEqual(items[1], item(for: 1))
-            XCTAssertEqual(items[2], item(for: 2))
-            XCTAssertEqual(items[3], item(for: 3))
-            XCTAssertEqual(items[4], item(for: 4))
-            XCTAssertEqual(items[5], item(for: 5))
-            XCTAssertEqual(items[6], item(for: 6))
-            XCTAssertEqual(items[7], item(for: 7))
+        case let .success(feed):
+            XCTAssertEqual(feed[0], image(for: 0))
+            XCTAssertEqual(feed[1], image(for: 1))
+            XCTAssertEqual(feed[2], image(for: 2))
+            XCTAssertEqual(feed[3], image(for: 3))
+            XCTAssertEqual(feed[4], image(for: 4))
+            XCTAssertEqual(feed[5], image(for: 5))
+            XCTAssertEqual(feed[6], image(for: 6))
+            XCTAssertEqual(feed[7], image(for: 7))
             
         case let .failure(error):
             XCTFail("Failed with \(error), expected success instead")
@@ -52,16 +52,16 @@ class EssentialFeedEndToEndAPITests: XCTestCase {
         return capturedResult
     }
     
-    private func item(for index: Int) -> FeedItem {
-        return FeedItem(
-            id: idForItem(at: index),
-            description: descriptionForItem(at: index),
-            location: locationForItem(at: index),
-            imageURL: imageURLForItem(at: index)
+    private func image(for index: Int) -> FeedImage {
+        return FeedImage(
+            id: idForImage(at: index),
+            description: descriptionForImage(at: index),
+            location: locationForImage(at: index),
+            url: imageURLForImage(at: index)
         )
     }
     
-    private func idForItem(at index: Int) -> UUID {
+    private func idForImage(at index: Int) -> UUID {
         [
             UUID(uuidString: "73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6")!,
             UUID(uuidString: "BA298A85-6275-48D3-8315-9C8F7C1CD109")!,
@@ -74,7 +74,7 @@ class EssentialFeedEndToEndAPITests: XCTestCase {
         ][index]
     }
     
-    private func descriptionForItem(at index: Int) -> String? {
+    private func descriptionForImage(at index: Int) -> String? {
         [
             "Description 1",
             nil,
@@ -87,7 +87,7 @@ class EssentialFeedEndToEndAPITests: XCTestCase {
         ][index]
     }
     
-    private func locationForItem(at index: Int) -> String? {
+    private func locationForImage(at index: Int) -> String? {
         [
             "Location 1",
             "Location 2",
@@ -100,7 +100,7 @@ class EssentialFeedEndToEndAPITests: XCTestCase {
         ][index]
     }
     
-    private func imageURLForItem(at index: Int) -> URL {
+    private func imageURLForImage(at index: Int) -> URL {
         URL(string: "https://url-\(index + 1).com")!
     }
 }

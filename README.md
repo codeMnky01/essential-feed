@@ -17,16 +17,16 @@ So i can always enjoy newest images of friends
 
 ```
  Given the customer have connectivity
-  When the customer requests to see their feed
-  Then the app should display latest feed from remote
-   And replace cache with new feed
+  When the customer requests to see their image feed
+  Then the app should display latest image feed from remote
+   And replace cache with new image feed
 ```
 
 ### Narative #2
 
 ```
 As offline customer 
-I want app to automaticaly load cached feed
+I want app to automaticaly load cached image feed
 So i can always enjoy cached images while offline
 ```
 
@@ -34,20 +34,20 @@ So i can always enjoy cached images while offline
 
 ```
  Given the customer doesn't have connectivity
-   And there is a cached version of the feed 
+   And there is a cached version of the image feed 
    And the cache is less then 7 days old
-  When the customer request to show the feed
+  When the customer request to show the image feed
   Then the app displays cache image feed
 
  Given the customer doesn't have connectivity
-   And there is a cached version of the feed 
+   And there is a cached version of the image feed 
    And the cache is 7 days old or more
-  When the customer request to show the feed
+  When the customer request to show the image feed
   Then the app displays error message
   
  Given the customer doesn't have connectivity
    And the cache is empty
-  When the customer request to show the feed
+  When the customer request to show the image feed
   Then the app displays error message
 ```
 
@@ -61,7 +61,7 @@ So i can always enjoy cached images while offline
 - URL
 
 ##### Primary course (happy path):
-1. Execute "Load Feed Items" command with above data
+1. Execute "Load Image Feed" command with above data
 2. System downloads data from URL
 3. System validates downloaded data
 4. System creates image feed from valid data
@@ -79,7 +79,7 @@ So i can always enjoy cached images while offline
 - URL
 
 ##### Primary course (happy path):
-1. Execute "Load Feed Items" command with above data
+1. Execute "Load Image Feed" command with above data
 2. System retrieves image feed data from cache
 3. System validates cache is less then 7 days old
 4. System creates image feed from valid data
@@ -98,10 +98,10 @@ So i can always enjoy cached images while offline
 ## Cache Feed - Use Case
 
 #### Data:
-- Feed Items
+- Image Feed
 
 ##### Primary course (happy path):
-1. Execute "Save Feed Items" command with above data
+1. Execute "Save Image Feed" command with above data
 2. System deletes old cache
 3. System encodes new image feed
 4. System timestamps encoded image feed
