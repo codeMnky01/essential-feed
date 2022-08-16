@@ -20,7 +20,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         let url = URL(string: "http://a-other-url.com")!
         let (sut, client) = makeSUT(url: url)
         
-        sut.load() { _ in }
+        sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -29,8 +29,8 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         let url = URL(string: "http://a-other-url.com")!
         let (sut, client) = makeSUT(url: url)
         
-        sut.load() { _ in }
-        sut.load() { _ in }
+        sut.load { _ in }
+        sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -102,7 +102,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
         
         var capturedResults = [RemoteFeedLoader.Result]()
-        sut?.load() { capturedResults.append($0) }
+        sut?.load { capturedResults.append($0) }
         
         sut = nil
         client.complete(withStatusCode: 200, data: makeItemsJSON(items: []))
@@ -151,7 +151,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         
         let exp = expectation(description: "Waiting for load to complete")
         
-        sut.load() { receivedResult in
+        sut.load { receivedResult in
             switch (expectedResult, receivedResult) {
                 
             case let (.success(expectedItems), .success(receivedItems)):

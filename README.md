@@ -86,7 +86,8 @@ So i can always enjoy cached images while offline
 5. System delivers image feed
 
 ##### Retrieval error course (sad path):
-1. System delivers retrieval error
+1. System deletes cache
+2. System delivers retrieval error
 
 ##### Expired cache course (sad path):
 1. System deletes cache
