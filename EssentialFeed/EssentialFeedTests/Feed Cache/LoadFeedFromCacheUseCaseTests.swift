@@ -63,20 +63,20 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         return (sut, store)
     }
     
-    private func expect(_ sut: LocalFeedLoader, completeWith expectedResult: LoadFeedResult, when action: @escaping () -> Void) {
+    private func expect(_ sut: LocalFeedLoader, completeWith expectedResult: LoadFeedResult, when action: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         
         sut.load() { receivedResult in
             switch (expectedResult, receivedResult) {
                 
             case (let .success(expectedImages), let .success(receivedImages)):
-                XCTAssertEqual(expectedImages, receivedImages)
+                XCTAssertEqual(expectedImages, receivedImages, file: file, line: line)
                 
             case (let .failure(expectedError), let .failure(receivedError)):
-                XCTAssertEqual(expectedError as NSError, receivedError as NSError)
+                XCTAssertEqual(expectedError as NSError, receivedError as NSError, file: file, line: line)
                 
             default:
-                XCTFail("Expected \(expectedResult), got \(receivedResult) instead")
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
             }
             
             exp.fulfill()
