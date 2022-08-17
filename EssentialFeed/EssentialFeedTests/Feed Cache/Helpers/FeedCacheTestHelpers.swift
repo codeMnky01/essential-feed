@@ -19,12 +19,19 @@ func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
 }
 
 extension Date {
-    func adding(days: Int) -> Date {
-        Calendar.init(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    func minusMaxCacheAge() -> Date {
+        adding(days: -maxCacheAgeInDays)
     }
     
+    var maxCacheAgeInDays: Int { 7 }
+    
+    private func adding(days: Int) -> Date {
+        Calendar.init(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    }
+}
+
+extension Date {
     func adding(seconds: TimeInterval) -> Date {
         addingTimeInterval(seconds)
     }
 }
-
