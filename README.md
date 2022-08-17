@@ -73,6 +73,7 @@ So i can always enjoy cached images while offline
 ##### No connection - error course (sad path):
 1. System delivers connectivity error
 
+
 ## Load Feed from Cache - Use Case
 
 #### Data: 
@@ -86,15 +87,28 @@ So i can always enjoy cached images while offline
 5. System delivers image feed
 
 ##### Retrieval error course (sad path):
-1. System deletes cache
-2. System delivers retrieval error
+1. System delivers retrieval error
 
 ##### Expired cache course (sad path):
-1. System deletes cache
-2. System delivers no feed images
+1. System delivers no feed images
 
 ##### Empty cache course (sad path):
 1. System delivers no feed images
+
+
+## Validate Feed Cache - Use Case
+
+##### Primary course (happy path):
+1. Execute "Validate Feed Cache" command
+2. System retrieves image feed data from cache
+3. System validates cache is less then 7 days old
+
+##### Retrieval error course (sad path):
+1. System deletes cache
+
+##### Expired cache course (sad path):
+1. System deletes cache
+
 
 ## Cache Feed - Use Case
 
