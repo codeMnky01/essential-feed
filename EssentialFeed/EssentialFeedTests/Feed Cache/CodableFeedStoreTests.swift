@@ -8,12 +8,34 @@
 import XCTest
 import EssentialFeed
 
-private struct Cache: Codable {
-    let feed: [LocalFeedImage]
-    let timestamp: Date
-}
-
 class CodableFeedStore {
+    private struct Cache: Codable {
+        let feed: [CodableFeedImage]
+        let timestamp: Date
+        
+        var localFeed: [LocalFeedImage] {
+            feed.map(\.local)
+        }
+    }
+    
+    private struct CodableFeedImage: Codable {
+        private let id: UUID
+        private let description: String?
+        private let location: String?
+        private let url: URL
+        
+        init(_ localFeedImage: LocalFeedImage) {
+            self.id = localFeedImage.id
+            self.description = localFeedImage.description
+            self.location = localFeedImage.location
+            self.url = localFeedImage.url
+        }
+        
+        var local: LocalFeedImage {
+            LocalFeedImage(id: id, description: description, location: location, url: url)
+        }
+    }
+    
     private let cacheStoreURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("imagefeed.store")
     
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
@@ -27,12 +49,13 @@ class CodableFeedStore {
             return
         }
         
-        completion(.found(feed: cache.feed, timestamp: cache.timestamp))
+        completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
         let encoder = JSONEncoder()
-        let cache = Cache(feed: feed, timestamp: timestamp)
+        let codableFeed = feed.map(CodableFeedImage.init)
+        let cache = Cache(feed: codableFeed, timestamp: timestamp)
         let encoded = try! encoder.encode(cache)
         try! encoded.write(to: cacheStoreURL)
         
