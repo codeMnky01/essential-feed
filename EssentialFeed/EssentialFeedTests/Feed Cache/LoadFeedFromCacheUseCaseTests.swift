@@ -32,7 +32,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         })
     }
     
-    func test_load_deliversEmtpyImageFeedOnEmptyCache() {
+    func test_load_deliversEmptyImageFeedOnEmptyCache() {
         let (sut, store) = makeSUT()
         let imageFeed = [FeedImage]()
     

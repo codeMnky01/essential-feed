@@ -21,11 +21,11 @@ extension LocalFeedLoader {
     public typealias SaveResult = Error?
     
     public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> ()) {
-        store.deleteCachedFeed { [weak self] delitionError in
+        store.deleteCachedFeed { [weak self] deletionError in
             guard let self = self else { return }
             
-            if let delitionError = delitionError {
-                completion(delitionError)
+            if let deletionError = deletionError {
+                completion(deletionError)
             } else {
                 self.cache(feed, with: completion)
             }
