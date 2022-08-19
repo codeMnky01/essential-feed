@@ -98,12 +98,7 @@ class CodableFeedStoreTests: XCTestCase {
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         
-        let exp = expectation(description: "Wait for cache insertion")
-        sut.insert(feed, timestamp: timestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected nil, got \(insertionError!)")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        insert(feed: feed, timestamp: timestamp, to: sut)
         
         expect(sut, toRetrieve: .found(feed: feed, timestamp: timestamp))
     }
@@ -113,12 +108,7 @@ class CodableFeedStoreTests: XCTestCase {
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         
-        let exp = expectation(description: "Wait for cache insertion")
-        sut.insert(feed, timestamp: timestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected nil, got \(insertionError!)")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        insert(feed: feed, timestamp: timestamp, to: sut)
         
         expect(sut, toRetrieveTwice: .found(feed: feed, timestamp: timestamp))
     }
@@ -129,6 +119,15 @@ class CodableFeedStoreTests: XCTestCase {
         let store = CodableFeedStore(cacheStoreURL: testSpecificStoreURL())
         trackMemoryLeaks(instance: store, file: file, line: line)
         return store
+    }
+    
+    private func insert(feed: [LocalFeedImage], timestamp: Date, to sut: CodableFeedStore, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for cache insertion")
+        sut.insert(feed, timestamp: timestamp) { insertionError in
+            XCTAssertNil(insertionError, "Expected nil, got \(insertionError!)", file: file, line: line )
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func expect(_ sut: CodableFeedStore, toRetrieveTwice expectedResult: CacheRetrievalResult, file: StaticString = #filePath, line: UInt = #line) {
