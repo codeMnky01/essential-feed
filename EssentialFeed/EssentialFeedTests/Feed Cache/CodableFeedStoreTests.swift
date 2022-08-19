@@ -98,7 +98,7 @@ class CodableFeedStoreTests: XCTestCase {
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         
-        let exp = expectation(description: "Wait for completion")
+        let exp = expectation(description: "Wait for cache insertion")
         sut.insert(feed, timestamp: timestamp) { insertionError in
             XCTAssertNil(insertionError, "Expected nil, got \(insertionError!)")
             exp.fulfill()
@@ -113,7 +113,7 @@ class CodableFeedStoreTests: XCTestCase {
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         
-        let exp = expectation(description: "Wait for completion")
+        let exp = expectation(description: "Wait for cache insertion")
         sut.insert(feed, timestamp: timestamp) { insertionError in
             XCTAssertNil(insertionError, "Expected nil, got \(insertionError!)")
             exp.fulfill()
