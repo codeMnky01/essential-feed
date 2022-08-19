@@ -87,7 +87,7 @@ class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_insert_deliversFailureOnInsertionError() {
-        let invalidStoreURL = cachesDirectory()
+        let invalidStoreURL = cachesDirectoryURL()
         let sut = makeSUT(storeURL: invalidStoreURL)
         let feed = uniqueImageFeed().local
         let timestamp = Date()
@@ -183,10 +183,10 @@ class CodableFeedStoreTests: XCTestCase {
     }
     
     private func testSpecificStoreURL() -> URL {
-        cachesDirectory().appendingPathComponent("\(type(of: self)).store")
+        cachesDirectoryURL().appendingPathComponent("\(type(of: self)).store")
     }
     
-    private func cachesDirectory() -> URL {
+    private func cachesDirectoryURL() -> URL {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
     
