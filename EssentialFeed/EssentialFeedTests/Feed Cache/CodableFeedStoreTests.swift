@@ -58,13 +58,17 @@ class CodableFeedStore {
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
-        let encoder = JSONEncoder()
-        let codableFeed = feed.map(CodableFeedImage.init)
-        let cache = Cache(feed: codableFeed, timestamp: timestamp)
-        let encoded = try! encoder.encode(cache)
-        try! encoded.write(to: cacheStoreURL)
-        
-        completion(nil)
+        do {
+            let encoder = JSONEncoder()
+            let codableFeed = feed.map(CodableFeedImage.init)
+            let cache = Cache(feed: codableFeed, timestamp: timestamp)
+            let encoded = try encoder.encode(cache)
+            try encoded.write(to: cacheStoreURL)
+            
+            completion(nil)
+        } catch(let error) {
+            completion(error)
+        }
     }
 }
 
@@ -144,6 +148,16 @@ class CodableFeedStoreTests: XCTestCase {
         XCTAssertNil(latestError, "Expected nil, got \(latestError!)")
         
         expect(sut, toRetrieve: .found(feed: latestFeed, timestamp: latestTimestamp))
+    }
+    
+    func test_insert_deliversFailureOnInsertionError() {
+        let invalidStoreURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        let feed = uniqueImageFeed().local
+        let timestamp = Date()
+        
+        let error = insert(feed: feed, timestamp: timestamp, to: sut)
+        XCTAssertNotNil(error, "Expected cache insertion to fail with an error")
     }
     
     // MARK: - Helpers
