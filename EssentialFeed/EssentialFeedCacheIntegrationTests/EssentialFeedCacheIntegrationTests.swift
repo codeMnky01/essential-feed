@@ -34,13 +34,39 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
         
         let expSave = expectation(description: "Wait for completion")
         sutToPerformSave.save(savedItems) { error in
-            XCTAssertNil(error, "Expected to successfully delete, got \(error!) instead")
+            XCTAssertNil(error, "Expected to successfully save")
             expSave.fulfill()
         }
         
         wait(for: [expSave], timeout: 1.0)
         
         expect(sutToPerformLoad, toLoad: savedItems)
+    }
+    
+    func test_save_overridesItemsSavedOnASeparateInstance() {
+        let sutToPerformFirstSave = makeSUT()
+        let sutToPerformLastSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
+        let firstSavedItems = uniqueImageFeed().models
+        let lastSavedItems = uniqueImageFeed().models
+        
+        let expSave1 = expectation(description: "Wait for completion")
+        sutToPerformFirstSave.save(firstSavedItems) { error in
+            XCTAssertNil(error, "Expected to successfully save")
+            expSave1.fulfill()
+        }
+        
+        wait(for: [expSave1], timeout: 1.0)
+        
+        let expSave2 = expectation(description: "Wait for completion")
+        sutToPerformLastSave.save(lastSavedItems) { error in
+            XCTAssertNil(error, "Expected to successfully save")
+            expSave2.fulfill()
+        }
+        
+        wait(for: [expSave2], timeout: 1.0)
+        
+        expect(sutToPerformLoad, toLoad: lastSavedItems)
     }
     
     // MARK: - Helpers
