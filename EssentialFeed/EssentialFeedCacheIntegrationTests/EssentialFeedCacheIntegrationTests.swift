@@ -32,7 +32,7 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
-        let storeURL = testStoreURL()
+        let storeURL = testSpecificStoreURL()
         let store = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
         let sut = LocalFeedLoader(store: store, currentDate: Date.init)
     
@@ -42,7 +42,7 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
         return sut
     }
     
-    private func testStoreURL() -> URL {
+    private func testSpecificStoreURL() -> URL {
         cachesDirectoryURL().appendingPathComponent("\(type(of: self)).store")
     }
     
