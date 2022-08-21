@@ -40,6 +40,35 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_load_deliversItemsSavedOnASeparateInstance() {
+        let sutToPerformSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
+        let savedItems = uniqueImageFeed()
+        
+        let expSave = expectation(description: "Wait for completion")
+        sutToPerformSave.save(savedItems.models) { error in
+            XCTAssertNil(error, "Expected to successfully delete, got \(error!) instead")
+            expSave.fulfill()
+        }
+        
+        wait(for: [expSave], timeout: 1.0)
+        
+        let expLoad = expectation(description: "Wait for completion")
+        sutToPerformLoad.load { result in
+            switch result {
+            case let .success(feed):
+                XCTAssertEqual(feed, savedItems.models)
+                
+            case let .failure(error):
+                XCTFail("Expected successful result, got \(error) instead")
+            }
+            
+            expLoad.fulfill()
+        }
+        
+        wait(for: [expLoad], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
