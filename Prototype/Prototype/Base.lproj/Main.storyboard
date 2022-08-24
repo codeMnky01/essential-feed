@@ -10,14 +10,24 @@
         <!--My Feed-->
         <scene sceneID="B8u-cS-EaW">
             <objects>
-                <tableViewController id="t43-mh-xX2" sceneMemberID="viewController">
+                <tableViewController id="t43-mh-xX2" customClass="FeedViewController" customModule="Prototype" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="uEC-yv-vyV">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="AOf-Rh-rGl">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="8"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        </view>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="3E3-Ho-aKm">
+                            <rect key="frame" x="0.0" y="655" width="414" height="8"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="580" id="FbJ-OL-6pC">
-                                <rect key="frame" x="0.0" y="44.5" width="414" height="580"/>
+                                <rect key="frame" x="0.0" y="52.5" width="414" height="580"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="FbJ-OL-6pC" id="G11-8C-Gym">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="580"/>
@@ -102,8 +112,8 @@ location Location location</string>
                         </prototypes>
                         <sections/>
                         <connections>
-                            <outlet property="dataSource" destination="t43-mh-xX2" id="IAk-BI-PhU"/>
-                            <outlet property="delegate" destination="t43-mh-xX2" id="rqf-Mh-wF1"/>
+                            <outlet property="dataSource" destination="t43-mh-xX2" id="qZb-gb-UPC"/>
+                            <outlet property="delegate" destination="t43-mh-xX2" id="mWQ-fi-ieF"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Feed" id="zMJ-OL-F7Z"/>
