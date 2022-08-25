@@ -1,7 +1,8 @@
-# essential-feed
-Essential Feed case study
+# Essential Feed case study
 
-[![CI](https://github.com/codeMnky01/essential-feed/actions/workflows/CI.yml/badge.svg)](https://github.com/codeMnky01/essential-feed/actions/workflows/CI.yml)
+[![CI-iOS](https://github.com/codeMnky01/essential-feed/actions/workflows/CI-iOS.yml/badge.svg)](https://github.com/codeMnky01/essential-feed/actions/workflows/CI-iOS.yml)
+[![CI-macOS](https://github.com/codeMnky01/essential-feed/actions/workflows/CI-macOS.yml/badge.svg)](https://github.com/codeMnky01/essential-feed/actions/workflows/CI-macOS.yml)
+
 
 ## Story: Customer requests to see their image feed
 
