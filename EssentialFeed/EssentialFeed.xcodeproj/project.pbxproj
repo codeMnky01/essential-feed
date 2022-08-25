@@ -22,6 +22,7 @@
 		552E0AFA28B7994700BE1E1E /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552E0AF928B7994700BE1E1E /* FeedViewControllerTests.swift */; };
 		552E0AFC28B79C7E00BE1E1E /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550B6FAD289AEEFE0025DB90 /* EssentialFeed.framework */; platformFilter = ios; };
 		552E0AFD28B79C7E00BE1E1E /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 550B6FAD289AEEFE0025DB90 /* EssentialFeed.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		552E0B0128B79D7E00BE1E1E /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2FC2228A2989C00E8C82F /* XCTestCase+MemoryLeakTracking.swift */; };
 		55525F5128B2A24E007F27E1 /* EssentialFeedCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55525F5028B2A24E007F27E1 /* EssentialFeedCacheIntegrationTests.swift */; };
 		55525F5228B2A24E007F27E1 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550B6FAD289AEEFE0025DB90 /* EssentialFeed.framework */; };
 		55525F5828B2A465007F27E1 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5568023A28ACF6EC004DB8B2 /* SharedTestHelpers.swift */; };
@@ -640,6 +641,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				552E0AFA28B7994700BE1E1E /* FeedViewControllerTests.swift in Sources */,
+				552E0B0128B79D7E00BE1E1E /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
