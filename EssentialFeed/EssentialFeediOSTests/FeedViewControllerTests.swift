@@ -34,14 +34,14 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expect show loading indicator on viewDidLoad")
         
         loader.completeFeedLoading(at: 0)
-        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expect hide indicator when complete loading")
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expect hide indicator when complete loading succeeds")
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expect show loading indicator on user load request")
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading(at: 1)
-        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expect hide indicator when user initiated load request complete")
+        loader.completeFeedLoadingWithError(at: 1)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expect hide indicator when user initiated load request fails with an error")
     }
     
     func test_loadCompletion_rendersSuccessfullyLoadedFeed() {
