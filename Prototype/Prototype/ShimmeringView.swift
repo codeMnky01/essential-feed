@@ -7,8 +7,8 @@
 
 import UIKit
 
-class ShimmeringView: UIView {
-    override func layoutSubviews() {
+public class ShimmeringView: UIView {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         if isShimmering {
@@ -17,7 +17,11 @@ class ShimmeringView: UIView {
         }
     }
     
-    func startShimmering() {
+    public var isShimmering: Bool {
+        layer.mask?.animation(forKey: shimmeringAnimationKey) != nil
+    }
+    
+    public func startShimmering() {
         let white = UIColor.white.cgColor
         let alpha = UIColor.white.withAlphaComponent(0.7).cgColor
         let width = bounds.width
@@ -39,15 +43,11 @@ class ShimmeringView: UIView {
         gradient.add(animation, forKey: shimmeringAnimationKey)
     }
     
-    func stopShimmering() {
+    public func stopShimmering() {
         layer.mask = nil
     }
     
     private var shimmeringAnimationKey: String {
         "shimmer"
-    }
-    
-    private var isShimmering: Bool {
-        layer.mask?.animation(forKey: shimmeringAnimationKey) != nil
     }
 }
