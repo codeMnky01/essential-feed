@@ -92,6 +92,22 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
     }
     
+    func test_feedImageView_cancelsLoadingImageFromURLWhenViewIsNotVisibleAnymore() {
+        let (sut, loader) = makeSUT()
+        let image0 = makeImage(url: URL(string: "http://any-url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://any-url-1.com")!)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
+        XCTAssertEqual(loader.canceledImageURLs, [])
+        
+        sut.simulateFeedImageViewIsNotVisible(at: 0)
+        XCTAssertEqual(loader.canceledImageURLs, [image0.url])
+        
+        sut.simulateFeedImageViewIsNotVisible(at: 1)
+        XCTAssertEqual(loader.canceledImageURLs, [image0.url, image1.url])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -151,10 +167,15 @@ final class FeedViewControllerTests: XCTestCase {
         }
         
         // MARK: - FeedImageDataLoader
-        var loadedImageURLs = [URL]()
+        private(set) var loadedImageURLs = [URL]()
+        private(set) var canceledImageURLs = [URL]()
         
         func loadImageData(from url: URL) {
             loadedImageURLs.append(url)
+        }
+        
+        func cancelImageDataLoading(from url: URL) {
+            canceledImageURLs.append(url)
         }
     }
 }
@@ -164,8 +185,16 @@ private extension FeedViewController {
         refreshControl?.simulatePullTuRefresh()
     }
     
-    func simulateFeedImageViewIsVisible(at index: Int = 0) {
-        let _ = feedImageView(at: index)
+    @discardableResult
+    func simulateFeedImageViewIsVisible(at index: Int = 0) -> FeedImageCell? {
+        return feedImageView(at: index) as? FeedImageCell
+    }
+    
+    func simulateFeedImageViewIsNotVisible(at index: Int = 0) {
+        let view = simulateFeedImageViewIsVisible(at: index)
+        let delegate = tableView.delegate
+        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
+        delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: indexPath)
     }
     
     var isShowingLoadingIndicator: Bool {
