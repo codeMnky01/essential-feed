@@ -44,6 +44,25 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expect hide indicator when user initiated load request complete")
     }
     
+    func test_loadCompletion_rendersSuccessfullyLoadedFeed() {
+        let (sut, loader) = makeSUT()
+        
+        let image0 = makeImage(description: "a description", location: "a location")
+        let image1 = makeImage(description: "a description", location: nil)
+        let image2 = makeImage(description: nil, location: "a location")
+        let image3 = makeImage(description: nil, location: nil)
+        
+        sut.loadViewIfNeeded()
+        assertThat(sut, isRendering: [])
+        
+        loader.completeFeedLoading(with: [image0], at: 0)
+        assertThat(sut, isRendering: [image0])
+    
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
+        assertThat(sut, isRendering: [image0, image1, image2, image3])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -56,6 +75,33 @@ final class FeedViewControllerTests: XCTestCase {
         return (sut, loader)
     }
     
+    func makeImage(description: String?, location: String?, url: URL = URL(string: "any-url.com")!) -> FeedImage {
+        FeedImage(id: UUID(), description: description, location: location, url: url)
+    }
+    
+    private func assertThat(_ sut: FeedViewController, isRendering images: [FeedImage], file: StaticString = #filePath, line: UInt = #line) {
+        guard sut.numberOfRenderedFeedImageViews == images.count else {
+            XCTFail("Expected to render same amount views as loaded", file: file, line: line)
+            return
+        }
+        
+        images.enumerated().forEach { (index, image) in
+            assertThat(sut, hasViewConfiguredAt: index, with: image)
+        }
+    }
+    
+    private func assertThat(_ sut: FeedViewController, hasViewConfiguredAt index: Int, with image: FeedImage, file: StaticString = #filePath, line: UInt = #line) {
+        let view = sut.feedImageView(at: index)
+        guard let cell = view as? FeedImageCell else {
+            XCTFail("Expected to get a FeedImageCell, got \(String(describing: view.self)) instead")
+            return
+        }
+        
+        XCTAssertEqual(cell.isShowingLocation, image.location != nil, file: file, line: line)
+        XCTAssertEqual(cell.locationText, image.location, file: file, line: line)
+        XCTAssertEqual(cell.descriptionText, image.description, file: file, line: line)
+    }
+    
     class LoaderSpy: FeedLoader {
         private var loadingCompletions = [(FeedLoader.Result) -> Void]()
         var loadCallCount: Int { loadingCompletions.count }
@@ -64,8 +110,8 @@ final class FeedViewControllerTests: XCTestCase {
             loadingCompletions.append(completion)
         }
         
-        func completeFeedLoading(at index: Int) {
-            loadingCompletions[index](.success([]))
+        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int) {
+            loadingCompletions[index](.success(feed))
         }
     }
 }
@@ -77,6 +123,32 @@ private extension FeedViewController {
     
     var isShowingLoadingIndicator: Bool {
         refreshControl?.isRefreshing == true
+    }
+    
+    private var sectionForFeedImageViews: Int { 0 }
+    
+    var numberOfRenderedFeedImageViews: Int {
+        tableView.numberOfRows(inSection: sectionForFeedImageViews)
+    }
+    
+    func feedImageView(at index: Int) -> UITableViewCell? {
+        let ds = tableView.dataSource
+        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
+        return ds?.tableView(tableView, cellForRowAt: indexPath)
+    }
+}
+
+private extension FeedImageCell {
+    var isShowingLocation: Bool {
+        !locationContainer.isHidden
+    }
+    
+    var locationText: String? {
+        locationLabel.text
+    }
+    
+    var descriptionText: String? {
+        descriptionLabel.text
     }
 }
 
