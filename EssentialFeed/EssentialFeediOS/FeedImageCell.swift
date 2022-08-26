@@ -13,4 +13,5 @@ public final class FeedImageCell: UITableViewCell {
     public let descriptionLabel = UILabel()
     public let feedImageViewContainer = ShimmeringView()
     public let feedImageView = UIImageView()
+    public let feedImageRetryButton = UIButton()
 }

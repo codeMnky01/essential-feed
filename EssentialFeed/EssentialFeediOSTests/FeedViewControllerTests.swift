@@ -155,6 +155,29 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view1?.renderedImage, imageData1)
     }
     
+    func test_feedImageView_showsRetryButtonOnLoadError() {
+        let (sut, loader) = makeSUT()
+        let image0 = makeImage()
+        let image1 = makeImage()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
+        
+        let view0 = sut.simulateFeedImageViewIsVisible(at: 0)
+        let view1 = sut.simulateFeedImageViewIsVisible(at: 1)
+        XCTAssertEqual(view0?.isShowingRetryButton, false)
+        XCTAssertEqual(view1?.isShowingRetryButton, false)
+        
+        let imageData0 = UIImage.make(with: .blue).pngData()!
+        loader.completeImageDataLoading(with: imageData0, at: 0)
+        XCTAssertEqual(view0?.isShowingRetryButton, false)
+        XCTAssertEqual(view1?.isShowingRetryButton, false)
+        
+        loader.completeImageDataLoadingWithError(at: 1)
+        XCTAssertEqual(view0?.isShowingRetryButton, false)
+        XCTAssertEqual(view1?.isShowingRetryButton, true)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -286,6 +309,10 @@ private extension FeedImageCell {
     
     var isShowingLoadingIndicator: Bool {
         feedImageViewContainer.isShimmering
+    }
+    
+    var isShowingRetryButton: Bool {
+        !feedImageRetryButton.isHidden
     }
     
     var locationText: String? {
