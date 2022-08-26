@@ -63,6 +63,19 @@ final class FeedViewControllerTests: XCTestCase {
         assertThat(sut, isRendering: [image0, image1, image2, image3])
     }
     
+    func test_loadCompletion_doesNotAlterCurrentRenderingStateOnError() {
+        let (sut, loader) = makeSUT()
+        let image0 = makeImage()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0], at: 0)
+        assertThat(sut, isRendering: [image0])
+        
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeFeedLoadingWithError(at: 1)
+        assertThat(sut, isRendering: [image0])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -75,7 +88,7 @@ final class FeedViewControllerTests: XCTestCase {
         return (sut, loader)
     }
     
-    func makeImage(description: String?, location: String?, url: URL = URL(string: "any-url.com")!) -> FeedImage {
+    func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "any-url.com")!) -> FeedImage {
         FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
@@ -112,6 +125,11 @@ final class FeedViewControllerTests: XCTestCase {
         
         func completeFeedLoading(with feed: [FeedImage] = [], at index: Int) {
             loadingCompletions[index](.success(feed))
+        }
+        
+        func completeFeedLoadingWithError(at index: Int) {
+            let error = NSError(domain: "domain", code: 1)
+            loadingCompletions[index](.failure(error))
         }
     }
 }

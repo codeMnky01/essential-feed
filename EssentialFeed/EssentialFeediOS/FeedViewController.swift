@@ -31,12 +31,10 @@ final public class FeedViewController: UITableViewController {
         refreshControl?.beginRefreshing()
         loader?.load { [weak self] result in
             if case let Result.success(feed) = result {
-                print(feed)
                 self?.tableModel = feed
                 self?.tableView.reloadData()
+                self?.refreshControl?.endRefreshing()
             }
-            
-            self?.refreshControl?.endRefreshing()
         }
     }
     
