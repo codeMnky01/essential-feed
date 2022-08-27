@@ -261,16 +261,6 @@ final class FeedViewControllerTests: XCTestCase {
     }
 }
 
-extension UIRefreshControl {
-    func simulatePullTuRefresh() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
-                (target as NSObject).perform(Selector(action))
-            }
-        }
-    }
-}
-
 extension UIImage {
     static func make(with color: UIColor) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
