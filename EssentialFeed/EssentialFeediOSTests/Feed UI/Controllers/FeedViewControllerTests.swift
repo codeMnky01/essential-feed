@@ -205,6 +205,10 @@ final class FeedViewControllerTests: XCTestCase {
         let view1 = sut.simulateFeedImageViewIsVisible(at: 1)
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
         
+        loader.completeImageDataLoadingWithError(at: 0)
+        loader.completeImageDataLoadingWithError(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
+        
         view0?.simulateRetryButtonTap()
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url, image0.url])
         
@@ -248,7 +252,7 @@ final class FeedViewControllerTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = FeedViewController(feedLoader: loader, imageLoader: loader)
+        let sut = FeedUIComposer.feedComposedWith(feedLoader: loader, imageLoader: loader)
         
         trackMemoryLeaks(instance: loader, file: file, line: line)
         trackMemoryLeaks(instance: sut, file: file, line: line)
@@ -258,189 +262,5 @@ final class FeedViewControllerTests: XCTestCase {
     
     func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "any-url.com")!) -> FeedImage {
         FeedImage(id: UUID(), description: description, location: location, url: url)
-    }
-    
-    private func assertThat(_ sut: FeedViewController, isRendering images: [FeedImage], file: StaticString = #filePath, line: UInt = #line) {
-        guard sut.numberOfRenderedFeedImageViews == images.count else {
-            XCTFail("Expected to render same amount views as loaded", file: file, line: line)
-            return
-        }
-        
-        images.enumerated().forEach { (index, image) in
-            assertThat(sut, hasViewConfiguredAt: index, with: image)
-        }
-    }
-    
-    private func assertThat(_ sut: FeedViewController, hasViewConfiguredAt index: Int, with image: FeedImage, file: StaticString = #filePath, line: UInt = #line) {
-        let view = sut.feedImageView(at: index)
-        guard let cell = view as? FeedImageCell else {
-            XCTFail("Expected to get a FeedImageCell, got \(String(describing: view.self)) instead")
-            return
-        }
-        
-        XCTAssertEqual(cell.isShowingLocation, image.location != nil, file: file, line: line)
-        XCTAssertEqual(cell.locationText, image.location, file: file, line: line)
-        XCTAssertEqual(cell.descriptionText, image.description, file: file, line: line)
-    }
-    
-    class LoaderSpy: FeedLoader, FeedImageDataLoader {
-        
-        // MARK: - FeedLoader
-        private var feedRequests = [(FeedLoader.Result) -> Void]()
-        var loadFeedCallCount: Int { feedRequests.count }
-        
-        func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            feedRequests.append(completion)
-        }
-        
-        func completeFeedLoading(with feed: [FeedImage] = [], at index: Int) {
-            feedRequests[index](.success(feed))
-        }
-        
-        func completeFeedLoadingWithError(at index: Int) {
-            let error = NSError(domain: "domain", code: 1)
-            feedRequests[index](.failure(error))
-        }
-        
-        // MARK: - FeedImageDataLoader
-        var loadedImageURLs: [URL] {
-            imageRequests.map(\.url)
-        }
-        
-        private(set) var canceledImageURLs = [URL]()
-        private(set) var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
-        
-        private struct TaskSpy: FeedImageDataLoaderTask {
-            let cancelCallback: () -> Void
-            
-            func cancel() {
-                cancelCallback()
-            }
-        }
-        
-        func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-            imageRequests.append((url, completion))
-            return TaskSpy { [weak self] in self?.canceledImageURLs.append(url) }
-        }
-        
-        func completeImageDataLoading(with data: Data = Data(), at index: Int) {
-            imageRequests[index].completion(.success(data))
-        }
-        
-        func completeImageDataLoadingWithError(at index: Int) {
-            let error = NSError(domain: "domain", code: 1)
-            imageRequests[index].completion(.failure(error))
-        }
-    }
-}
-
-private extension FeedViewController {
-    func simulateUserInitiatedFeedReload() {
-        refreshControl?.simulatePullTuRefresh()
-    }
-    
-    @discardableResult
-    func simulateFeedImageViewIsVisible(at index: Int = 0) -> FeedImageCell? {
-        return feedImageView(at: index) as? FeedImageCell
-    }
-    
-    func simulateFeedImageViewIsNotVisible(at index: Int = 0) {
-        let view = simulateFeedImageViewIsVisible(at: index)
-        let delegate = tableView.delegate
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: indexPath)
-    }
-    
-    func simulateFeedImageViewNearVisible(at index: Int = 0) {
-        let ds = tableView.prefetchDataSource
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        ds?.tableView(tableView, prefetchRowsAt: [indexPath])
-    }
-    
-    func simulateFeedImageViewNotNearVisibleAnymore(at index: Int = 0) {
-        simulateFeedImageViewNearVisible(at: index)
-        
-        let ds = tableView.prefetchDataSource
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
-    }
-    
-    var isShowingLoadingIndicator: Bool {
-        refreshControl?.isRefreshing == true
-    }
-    
-    private var sectionForFeedImageViews: Int { 0 }
-    
-    var numberOfRenderedFeedImageViews: Int {
-        tableView.numberOfRows(inSection: sectionForFeedImageViews)
-    }
-    
-    func feedImageView(at index: Int) -> UITableViewCell? {
-        let ds = tableView.dataSource
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        return ds?.tableView(tableView, cellForRowAt: indexPath)
-    }
-}
-
-private extension FeedImageCell {
-    func simulateRetryButtonTap() {
-        feedImageRetryButton.simulateTap()
-    }
-    
-    var isShowingLocation: Bool {
-        !locationContainer.isHidden
-    }
-    
-    var isShowingLoadingIndicator: Bool {
-        feedImageViewContainer.isShimmering
-    }
-    
-    var isShowingRetryButton: Bool {
-        !feedImageRetryButton.isHidden
-    }
-    
-    var locationText: String? {
-        locationLabel.text
-    }
-    
-    var descriptionText: String? {
-        descriptionLabel.text
-    }
-    
-    var renderedImage: Data? {
-        feedImageView.image?.pngData()
-    }
-}
-
-private extension UIButton {
-    func simulateTap() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach { action in
-                (target as NSObject).perform(Selector(action))
-            }
-        }
-    }
-}
-
-private extension UIRefreshControl {
-    func simulatePullTuRefresh() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
-                (target as NSObject).perform(Selector(action))
-            }
-        }
-    }
-}
-
-private extension UIImage {
-    static func make(with color: UIColor) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        UIGraphicsBeginImageContext(rect.size)
-        let context = UIGraphicsGetCurrentContext()
-        context?.setFillColor(color.cgColor)
-        context?.fill(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return img!
     }
 }
