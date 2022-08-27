@@ -333,37 +333,6 @@ final class FeedViewControllerTests: XCTestCase {
         }
     }
 }
-
-extension FeedImageCell {
-    func simulateRetryButtonTap() {
-        feedImageRetryButton.simulateTap()
-    }
-    
-    var isShowingLocation: Bool {
-        !locationContainer.isHidden
-    }
-    
-    var isShowingLoadingIndicator: Bool {
-        feedImageViewContainer.isShimmering
-    }
-    
-    var isShowingRetryButton: Bool {
-        !feedImageRetryButton.isHidden
-    }
-    
-    var locationText: String? {
-        locationLabel.text
-    }
-    
-    var descriptionText: String? {
-        descriptionLabel.text
-    }
-    
-    var renderedImage: Data? {
-        feedImageView.image?.pngData()
-    }
-}
-
 extension UIButton {
     func simulateTap() {
         allTargets.forEach { target in
