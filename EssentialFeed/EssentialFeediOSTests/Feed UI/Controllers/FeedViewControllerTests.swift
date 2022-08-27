@@ -205,6 +205,10 @@ final class FeedViewControllerTests: XCTestCase {
         let view1 = sut.simulateFeedImageViewIsVisible(at: 1)
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
         
+        loader.completeImageDataLoadingWithError(at: 0)
+        loader.completeImageDataLoadingWithError(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
+        
         view0?.simulateRetryButtonTap()
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url, image0.url])
         
