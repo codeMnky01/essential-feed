@@ -10,7 +10,7 @@
 
 ```
 As online customer 
-I want app to automaticaly load my latest image feed
+I want app to automatically load my latest image feed
 So i can always enjoy newest images of friends
 ```
 
@@ -27,7 +27,7 @@ So i can always enjoy newest images of friends
 
 ```
 As offline customer 
-I want app to automaticaly load cached image feed
+I want app to automatically load cached image feed
 So i can always enjoy cached images while offline
 ```
 
