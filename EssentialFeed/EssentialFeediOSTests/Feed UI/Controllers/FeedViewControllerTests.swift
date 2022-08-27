@@ -260,15 +260,6 @@ final class FeedViewControllerTests: XCTestCase {
         FeedImage(id: UUID(), description: description, location: location, url: url)
     }
 }
-extension UIButton {
-    func simulateTap() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach { action in
-                (target as NSObject).perform(Selector(action))
-            }
-        }
-    }
-}
 
 extension UIRefreshControl {
     func simulatePullTuRefresh() {
