@@ -334,55 +334,7 @@ final class FeedViewControllerTests: XCTestCase {
     }
 }
 
-private extension FeedViewController {
-    func simulateUserInitiatedFeedReload() {
-        refreshControl?.simulatePullTuRefresh()
-    }
-    
-    @discardableResult
-    func simulateFeedImageViewIsVisible(at index: Int = 0) -> FeedImageCell? {
-        return feedImageView(at: index) as? FeedImageCell
-    }
-    
-    func simulateFeedImageViewIsNotVisible(at index: Int = 0) {
-        let view = simulateFeedImageViewIsVisible(at: index)
-        let delegate = tableView.delegate
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: indexPath)
-    }
-    
-    func simulateFeedImageViewNearVisible(at index: Int = 0) {
-        let ds = tableView.prefetchDataSource
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        ds?.tableView(tableView, prefetchRowsAt: [indexPath])
-    }
-    
-    func simulateFeedImageViewNotNearVisibleAnymore(at index: Int = 0) {
-        simulateFeedImageViewNearVisible(at: index)
-        
-        let ds = tableView.prefetchDataSource
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
-    }
-    
-    var isShowingLoadingIndicator: Bool {
-        refreshControl?.isRefreshing == true
-    }
-    
-    private var sectionForFeedImageViews: Int { 0 }
-    
-    var numberOfRenderedFeedImageViews: Int {
-        tableView.numberOfRows(inSection: sectionForFeedImageViews)
-    }
-    
-    func feedImageView(at index: Int) -> UITableViewCell? {
-        let ds = tableView.dataSource
-        let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
-        return ds?.tableView(tableView, cellForRowAt: indexPath)
-    }
-}
-
-private extension FeedImageCell {
+extension FeedImageCell {
     func simulateRetryButtonTap() {
         feedImageRetryButton.simulateTap()
     }
@@ -412,7 +364,7 @@ private extension FeedImageCell {
     }
 }
 
-private extension UIButton {
+extension UIButton {
     func simulateTap() {
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach { action in
@@ -422,7 +374,7 @@ private extension UIButton {
     }
 }
 
-private extension UIRefreshControl {
+extension UIRefreshControl {
     func simulatePullTuRefresh() {
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
@@ -432,7 +384,7 @@ private extension UIRefreshControl {
     }
 }
 
-private extension UIImage {
+extension UIImage {
     static func make(with color: UIColor) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
         UIGraphicsBeginImageContext(rect.size)
