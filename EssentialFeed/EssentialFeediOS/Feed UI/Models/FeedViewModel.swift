@@ -9,21 +9,19 @@ import Foundation
 import EssentialFeed
 
 final public class FeedViewModel {
+    typealias Observer<T> = (T) -> Void
+    
     private var feedLoader: FeedLoader
     
-    private(set) var isLoading = false {
-        didSet { onStateChange?(self) }
-    }
+    var onLoadingStateChange: Observer<Bool>?
+    var onLoadFeed: Observer<[FeedImage]>?
     
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
     }
     
-    var onStateChange: ((FeedViewModel) -> Void)?
-    var onLoadFeed: (([FeedImage]) -> Void)?
-    
     func loadFeed() {
-        isLoading = true
+        onLoadingStateChange?(true)
         feedLoader.load { [weak self] result in
             guard let self = self else { return }
             
@@ -31,7 +29,7 @@ final public class FeedViewModel {
                 self.onLoadFeed?(feed)
             }
             
-            self.isLoading = false
+            self.onLoadingStateChange?(false)
         }
     }
 }
