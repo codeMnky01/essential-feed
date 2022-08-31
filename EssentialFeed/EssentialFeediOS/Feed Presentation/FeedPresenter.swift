@@ -24,22 +24,27 @@ protocol FeedView {
     func display(_ viewModel: FeedViewModel)
 }
 
-final public class FeedPresenter {
+final class FeedPresenter {
     typealias Observer<T> = (T) -> Void
     
+    private let feedLoadingView: FeedLoadingView
+    private let feedView: FeedView
+    
+    init(loadingView: FeedLoadingView, feedView: FeedView) {
+        self.feedLoadingView = loadingView
+        self.feedView = feedView
+    }
+    
     func didStartLoadingFeed() {
-        feedLoadingView?.display(FeedLoadingViewModel(isLoading: true))
+        feedLoadingView.display(FeedLoadingViewModel(isLoading: true))
     }
     
     func didFinishLoadingFeed(with feed: [FeedImage]) {
-        feedView?.display(FeedViewModel(feed: feed))
-        feedLoadingView?.display(FeedLoadingViewModel(isLoading: false))
+        feedView.display(FeedViewModel(feed: feed))
+        feedLoadingView.display(FeedLoadingViewModel(isLoading: false))
     }
     
     func didFinishLoadingFeed(with error: Error) {
-        feedLoadingView?.display(FeedLoadingViewModel(isLoading: false))
+        feedLoadingView.display(FeedLoadingViewModel(isLoading: false))
     }
-    
-    var feedLoadingView: FeedLoadingView?
-    var feedView: FeedView?
 }
