@@ -18,10 +18,17 @@ public class ShimmeringView: UIView {
     }
     
     public var isShimmering: Bool {
-        layer.mask?.animation(forKey: shimmeringAnimationKey) != nil
+        get {
+            layer.mask?.animation(forKey: shimmeringAnimationKey) != nil
+        }
+        
+        set {
+            if newValue { startShimmering() }
+            else { stopShimmering() }
+        }
     }
     
-    public func startShimmering() {
+    private func startShimmering() {
         let white = UIColor.white.cgColor
         let alpha = UIColor.white.withAlphaComponent(0.7).cgColor
         let width = bounds.width
@@ -43,7 +50,7 @@ public class ShimmeringView: UIView {
         gradient.add(animation, forKey: shimmeringAnimationKey)
     }
     
-    public func stopShimmering() {
+    private func stopShimmering() {
         layer.mask = nil
     }
     
