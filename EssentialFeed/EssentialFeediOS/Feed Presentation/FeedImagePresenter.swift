@@ -15,8 +15,6 @@ protocol FeedImageView {
 }
 
 final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
-    typealias Observer<T> = (T) -> Void
-    
     private var view: View
     private var imageTransformer: (Data) -> Image?
     
