@@ -12,21 +12,30 @@ public final class FeedUIComposer {
     private init() {}
     
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let feedViewModel = FeedViewModel(feedLoader: feedLoader)
-        let refreshController = FeedRefreshViewController(viewModel: feedViewModel)
-        let feedViewController = FeedViewController(refreshController: refreshController)
+        let presenter = FeedPresenter(feedLoader: feedLoader)
+        let refreshController = FeedRefreshViewController(presenter: presenter)
+        let feedController = FeedViewController(refreshController: refreshController)
         
-        feedViewModel.onLoadFeed = adaptFeedImagesToCellControllers(forwardingTo: feedViewController, using: imageLoader)
+        presenter.feedView = FeedViewAdapter(controller: feedController, loader: imageLoader)
+        presenter.feedLoadingView = refreshController
         
-        return feedViewController
+        return feedController
+    }
+}
+
+private class FeedViewAdapter: FeedView {
+    private weak var feedViewController: FeedViewController?
+    private var imageLoader: FeedImageDataLoader
+    
+    init(controller: FeedViewController, loader: FeedImageDataLoader) {
+        self.feedViewController = controller
+        self.imageLoader = loader
     }
     
-    private static func adaptFeedImagesToCellControllers(forwardingTo feedViewController: FeedViewController, using imageLoader: FeedImageDataLoader) -> (([FeedImage]) -> Void) {
-        { [weak feedViewController] feed in
-            feedViewController?.tableModel = feed.map { model in
-                let feedImageViewModel = FeedImageViewModel<UIImage>(model: model, imageLoader: imageLoader, imageTransformer: UIImage.init)
-                return FeedImageCellController(viewModel: feedImageViewModel)
-            }
+    func displayFeed(_ feed: [FeedImage]) {
+        feedViewController?.tableModel = feed.map { model in
+            let model = FeedImageViewModel<UIImage>(model: model, imageLoader: self.imageLoader, imageTransformer: UIImage.init)
+            return FeedImageCellController(viewModel: model)
         }
     }
 }
