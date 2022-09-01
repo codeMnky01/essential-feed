@@ -18,14 +18,14 @@ final class FeedImageCell: UITableViewCell {
         super.awakeFromNib()
         
         feedImageView.alpha = 0
-        feedImageContainer.startShimmering()
+        feedImageContainer.isShimmering = true
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         feedImageView.alpha = 0
-        feedImageContainer.startShimmering()
+        feedImageContainer.isShimmering = true
     }
     
     func fadeIn(_ image: UIImage?) {
@@ -35,7 +35,7 @@ final class FeedImageCell: UITableViewCell {
             self?.feedImageView.alpha = 1
         }, completion: { completed in
             if completed {
-                self.feedImageContainer.stopShimmering()
+                self.feedImageContainer.isShimmering = false
             }
         })
     }
