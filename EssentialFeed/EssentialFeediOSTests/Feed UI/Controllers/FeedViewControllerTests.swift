@@ -247,6 +247,17 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateFeedImageViewNotNearVisibleAnymore(at: 1)
         XCTAssertEqual(loader.canceledImageURLs, [image0.url, image1.url])
     }
+    
+    func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [makeImage()], at: 0)
+        
+        let view = sut.simulateFeedImageViewIsNotVisible(at: 0)
+        loader.completeImageDataLoading(with: anyImageData(), at: 0)
+        
+        XCTAssertNil(view?.renderedImage, "Expected no rendered image when cell is not visible and should be reset for reuse preparation")
+    }
 
     // MARK: - Helpers
     
@@ -260,7 +271,11 @@ final class FeedViewControllerTests: XCTestCase {
         return (sut, loader)
     }
     
-    func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "any-url.com")!) -> FeedImage {
+    private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "any-url.com")!) -> FeedImage {
         FeedImage(id: UUID(), description: description, location: location, url: url)
+    }
+    
+    private func anyImageData() -> Data {
+        return UIImage.make(with: .red).pngData()!
     }
 }
