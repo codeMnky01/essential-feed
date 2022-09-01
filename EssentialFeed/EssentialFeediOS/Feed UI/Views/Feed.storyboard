@@ -72,14 +72,26 @@ location Location location</string>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OtI-Rp-vdE">
                                                             <rect key="frame" x="0.0" y="0.0" width="374" height="374"/>
                                                         </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p7y-Di-t4I">
+                                                            <rect key="frame" x="0.0" y="0.0" width="374" height="374"/>
+                                                            <state key="normal" title="Button"/>
+                                                            <buttonConfiguration key="configuration" style="plain" title="↻">
+                                                                <fontDescription key="titleFontDescription" type="system" pointSize="60"/>
+                                                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </buttonConfiguration>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.89411764709999997" green="0.89411764709999997" blue="0.89411764709999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="OtI-Rp-vdE" firstAttribute="top" secondItem="Lh9-N7-wfn" secondAttribute="top" id="5jY-Aj-yhK"/>
+                                                        <constraint firstAttribute="bottom" secondItem="p7y-Di-t4I" secondAttribute="bottom" id="6wF-p0-hCi"/>
                                                         <constraint firstItem="OtI-Rp-vdE" firstAttribute="leading" secondItem="Lh9-N7-wfn" secondAttribute="leading" id="7Hn-Y6-scR"/>
                                                         <constraint firstAttribute="trailing" secondItem="OtI-Rp-vdE" secondAttribute="trailing" id="ANC-Yi-dDk"/>
+                                                        <constraint firstItem="p7y-Di-t4I" firstAttribute="leading" secondItem="Lh9-N7-wfn" secondAttribute="leading" id="Fq7-by-LJd"/>
+                                                        <constraint firstAttribute="trailing" secondItem="p7y-Di-t4I" secondAttribute="trailing" id="QdJ-ZL-1vU"/>
                                                         <constraint firstAttribute="bottom" secondItem="OtI-Rp-vdE" secondAttribute="bottom" id="Smf-w2-ZXo"/>
                                                         <constraint firstAttribute="width" secondItem="Lh9-N7-wfn" secondAttribute="height" multiplier="1:1" id="hkv-UN-0gR"/>
+                                                        <constraint firstItem="p7y-Di-t4I" firstAttribute="top" secondItem="Lh9-N7-wfn" secondAttribute="top" id="see-GH-ae6"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
