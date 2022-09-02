@@ -267,6 +267,33 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         XCTAssertNil(view?.renderedImage, "Expected no rendered image when cell is not visible and should be reset for reuse preparation")
     }
+    
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        
+        let exp = expectation(description: "Wait for completion")
+        DispatchQueue.global().async {
+            loader.completeFeedLoading(at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_loadFeedImageDataCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        let imageData = anyImageData()
+        
+        loader.completeFeedLoading(with: [makeImage()], at: 0)
+        sut.simulateFeedImageViewIsVisible()
+        let exp = expectation(description: "Wait for completion")
+        DispatchQueue.global().async {
+            loader.completeImageDataLoading(with: imageData, at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
 
     // MARK: - Helpers
     
