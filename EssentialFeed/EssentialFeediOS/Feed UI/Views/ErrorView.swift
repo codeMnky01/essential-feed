@@ -42,7 +42,7 @@ public class ErrorView: UIView {
         }
     }
     
-    private func hideMessageAnimated() {
+    @IBAction private func hideMessageAnimated() {
         UIView.animate(withDuration: 0.25) { [weak self] in
             self?.alpha = 0
         } completion: { [weak self] completed in
