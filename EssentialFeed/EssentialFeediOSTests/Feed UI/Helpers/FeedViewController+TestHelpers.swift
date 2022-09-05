@@ -52,6 +52,10 @@ extension FeedViewController {
         tableView.numberOfRows(inSection: sectionForFeedImageViews)
     }
     
+    var errorMessage: String? {
+        errorView.message
+    }
+    
     func feedImageView(at index: Int) -> UITableViewCell? {
         let ds = tableView.dataSource
         let indexPath = IndexPath(item: index, section: sectionForFeedImageViews)
