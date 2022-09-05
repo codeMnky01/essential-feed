@@ -21,10 +21,11 @@ public final class FeedUIComposer {
             title: FeedPresenter.title)
         
         presentationAdapter.feedPresenter = FeedPresenter(
-            loadingView: WeakRefVirtualProxy(feedController),
             feedView: FeedViewAdapter(
                 controller: feedController,
-                loader: MainQueueDispatchDecorator(decoratee: imageLoader)))
+                loader: MainQueueDispatchDecorator(decoratee: imageLoader)),
+            loadingView: WeakRefVirtualProxy(feedController),
+            errorView: WeakRefVirtualProxy(feedController))
         
         return feedController
     }

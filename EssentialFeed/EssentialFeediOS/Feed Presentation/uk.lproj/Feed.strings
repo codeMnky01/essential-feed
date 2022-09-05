@@ -7,3 +7,4 @@
 */
 
 "FEED_VIEW_TITLE" = "Моя Стрічка";
+"FEED_VIEW_CONNECTION_ERROR" = "Помилка з'єднання з сервером";

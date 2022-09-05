@@ -17,6 +17,8 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
         didSet { tableView.reloadData() }
     }
     
+    @IBOutlet private(set) public var errorView: ErrorView?
+    
     @IBAction private func refresh() {
         delegate?.didRequestFeedRefresh()
     }
@@ -66,10 +68,12 @@ final public class FeedViewController: UITableViewController, UITableViewDataSou
 
 extension FeedViewController: FeedLoadingView {
     func display(_ viewModel: FeedLoadingViewModel) {
-        if viewModel.isLoading {
-            refreshControl?.beginRefreshing()
-        } else {
-            refreshControl?.endRefreshing()
-        }
+        refreshControl?.update(isRefreshing: viewModel.isLoading)
+    }
+}
+
+extension FeedViewController: FeedErrorView {
+    func display(_ viewModel: FeedErrorViewModel) {
+        errorView?.message = viewModel.message
     }
 }
