@@ -5,9 +5,8 @@
 //  Created by Andrey on 9/1/22.
 //
 
-import Foundation
 import XCTest
-@testable import EssentialFeediOS
+import EssentialFeed
 
 final class FeedLocalizationTests: XCTestCase {
     func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {

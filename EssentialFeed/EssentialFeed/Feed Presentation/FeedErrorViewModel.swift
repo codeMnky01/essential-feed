@@ -1,12 +1,12 @@
 //
 //  FeedErrorViewModel.swift
-//  EssentialFeediOS
+//  EssentialFeed
 //
-//  Created by Andrey on 9/5/22.
+//  Created by Andrey on 9/8/22.
 //
 
-struct FeedErrorViewModel {
-    let message: String?
+public struct FeedErrorViewModel {
+    public let message: String?
     
     static var noError: FeedErrorViewModel {
         FeedErrorViewModel(message: .none)

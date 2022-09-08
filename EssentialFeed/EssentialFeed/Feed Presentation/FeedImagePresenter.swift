@@ -1,29 +1,28 @@
 //
 //  FeedImagePresenter.swift
-//  EssentialFeediOS
+//  EssentialFeed
 //
-//  Created by Andrey on 8/31/22.
+//  Created by Andrey on 9/8/22.
 //
 
 import Foundation
-import EssentialFeed
 
-protocol FeedImageView {
+public protocol FeedImageView {
     associatedtype Image
     
     func display(_ viewModel: FeedImageViewModel<Image>)
 }
 
-final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
-    private var view: View
+public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
+    private let view: View
     private var imageTransformer: (Data) -> Image?
     
-    init(view: View, imageTransformer: @escaping (Data) -> Image?) {
+    public init(view: View, imageTransformer: @escaping (Data) -> Image?) {
         self.view = view
         self.imageTransformer = imageTransformer
     }
     
-    func didStartImageDataLoading(for model: FeedImage) {
+    public func didStartImageDataLoading(for model: FeedImage) {
         view.display(FeedImageViewModel(
             description: model.description,
             location: model.location,
@@ -34,7 +33,7 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
     
     private struct InvalidDataImageError: Error {}
     
-    func didFinishImageDataLoadingWith(data: Data, for model: FeedImage) {
+    public func didFinishImageDataLoadingWith(data: Data, for model: FeedImage) {
         guard let image = imageTransformer(data) else {
             return didFinishImageDataLoadingWith(error: InvalidDataImageError(), for: model)
         }
@@ -47,7 +46,7 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
             shouldRetry: false))
     }
     
-    func didFinishImageDataLoadingWith(error: Error, for model: FeedImage) {
+    public func didFinishImageDataLoadingWith(error: Error, for model: FeedImage) {
         view.display(FeedImageViewModel(
             description: model.description,
             location: model.location,
