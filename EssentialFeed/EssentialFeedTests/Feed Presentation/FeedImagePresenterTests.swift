@@ -102,7 +102,9 @@ class FeedImagePresenterTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImagePresenter, view: ViewSpy) {
         let view = ViewSpy()
-        let sut = FeedImagePresenter(view: view, transformer: { _ in nil })
+        let sut = FeedImagePresenter(
+            view: view,
+            transformer: alwaysFailingImageTransformer)
         
         trackMemoryLeaks(instance: view, file: file, line: line)
         trackMemoryLeaks(instance: sut, file: file, line: line)
@@ -116,5 +118,9 @@ class FeedImagePresenterTests: XCTestCase {
         func display(_ viewModel: FeedImageViewModel) {
             messages.append(viewModel)
         }
+    }
+    
+    private var alwaysFailingImageTransformer: (Data) -> Any? {
+        { _ in nil }
     }
 }
