@@ -17,9 +17,9 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
     private let view: View
     private var imageTransformer: (Data) -> Image?
     
-    public init(view: View, transformer: @escaping (Data) -> Image?) {
+    public init(view: View, imageTransformer: @escaping (Data) -> Image?) {
         self.view = view
-        self.imageTransformer = transformer
+        self.imageTransformer = imageTransformer
     }
     
     public func didStartImageDataLoading(for model: FeedImage) {
