@@ -8,67 +8,6 @@
 import XCTest
 import EssentialFeed
 
-struct FeedImageViewModel<Image> {
-    let description: String?
-    let location: String?
-    let image: Image?
-    let isLoading: Bool
-    let shouldRetry: Bool
-    
-    var hasLocation: Bool {
-        location != nil
-    }
-}
-
-protocol FeedImageView {
-    associatedtype Image
-    
-    func display(_ viewModel: FeedImageViewModel<Image>)
-}
-
-final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
-    private let view: View
-    private var imageTransformer: (Data) -> Image?
-    
-    init(view: View, transformer: @escaping (Data) -> Image?) {
-        self.view = view
-        self.imageTransformer = transformer
-    }
-    
-    func didStartImageDataLoading(for model: FeedImage) {
-        view.display(FeedImageViewModel(
-            description: model.description,
-            location: model.location,
-            image: nil,
-            isLoading: true,
-            shouldRetry: false))
-    }
-    
-    private struct InvalidDataImageError: Error {}
-    
-    func didFinishImageDataLoadingWith(data: Data, for model: FeedImage) {
-        guard let image = imageTransformer(data) else {
-            return didFinishImageDataLoadingWith(error: InvalidDataImageError(), for: model)
-        }
-        
-        view.display(FeedImageViewModel(
-            description: model.description,
-            location: model.location,
-            image: image,
-            isLoading: false,
-            shouldRetry: false))
-    }
-    
-    func didFinishImageDataLoadingWith(error: Error, for model: FeedImage) {
-        view.display(FeedImageViewModel(
-            description: model.description,
-            location: model.location,
-            image: nil,
-            isLoading: false,
-            shouldRetry: true))
-    }
-}
-
 class FeedImagePresenterTests: XCTestCase {
     func test_init_doesNotSendMessagesAfterInitialization() {
         let (_, view) = makeSUT()
