@@ -75,6 +75,27 @@ So i can always enjoy cached images while offline
 1. System delivers connectivity error
 
 
+## Load Feed Image Data from Remote - Use Case
+
+#### Data: 
+- URL
+
+##### Primary course (happy path):
+1. Execute "Load Image Data" command with above data
+2. System downloads data from URL
+3. System validates downloaded data
+4. System delivers image
+
+##### Cancel course:
+1. System does not deliver image data nor error
+
+##### Invalid data - error course (sad path):
+1. System delivers invalid data error
+
+##### No connection - error course (sad path):
+1. System delivers connectivity error
+
+
 ## Load Feed from Cache - Use Case
 
 #### Data: 
@@ -95,6 +116,25 @@ So i can always enjoy cached images while offline
 
 ##### Empty cache course (sad path):
 1. System delivers no feed images
+
+## Load Feed Image Data from Cache - Use Case
+
+#### Data: 
+- URL
+
+##### Primary course (happy path):
+1. Execute "Load Image Data" command with above data
+2. System retrieves image data from cache
+3. System delivers image feed
+
+##### Cancel course:
+1. System does not deliver image data nor error
+
+##### Retrieval error course (sad path):
+1. System delivers retrieval error
+
+##### Empty cache course (sad path):
+1. System delivers no image
 
 
 ## Validate Feed Cache - Use Case
