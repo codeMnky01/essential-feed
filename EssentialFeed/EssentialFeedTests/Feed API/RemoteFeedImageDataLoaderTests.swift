@@ -124,6 +124,17 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         XCTAssertTrue(capturedResults.isEmpty)
     }
     
+    func test_cancelLoadImageDataURLTask_cancelsClientRequest() {
+        let (sut, client) = makeSUT()
+        let url = anyURL()
+        
+        let task = sut.loadImageData(from: url) { _ in  }
+        XCTAssertEqual(client.canceledURLs, [])
+        
+        task.cancel()
+        XCTAssertEqual(client.canceledURLs, [url])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
@@ -175,7 +186,9 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
     private class HTTPClientSpy: HTTPClient {
         
         private struct Task: HTTPClientTask {
-            func cancel() {}
+            let callback: () -> Void
+            
+            func cancel() { callback() }
         }
         
         var messages = [(url: URL, completion: (HTTPClient.Result) -> ())]()
@@ -184,9 +197,13 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
             messages.map(\.0)
         }
         
+        var canceledURLs = [URL]()
+        
         func get(from url: URL, completion: @escaping (HTTPClient.Result) -> ()) -> HTTPClientTask {
             messages.append((url, completion))
-            return Task()
+            return Task { [weak self] in
+                self?.canceledURLs.append(url)
+            }
         }
         
         func complete(withError error: Error, at index: Int = 0) {
