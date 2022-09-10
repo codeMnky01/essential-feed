@@ -40,7 +40,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         
         expect(sut: sut, toCompleteWith: failure(.connectivity), when: {
             let clientError = NSError(domain: "Domain", code: 0)
-            client.complete(with: clientError)
+            client.complete(withError: clientError)
         })
     }
     
@@ -166,38 +166,5 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private class HTTPClientSpy: HTTPClient {
-        
-        private struct Task: HTTPClientTask {
-            func cancel() {}
-        }
-        
-        private var messages = [(url: URL, completion: (HTTPClient.Result) -> ())]()
-        
-        var requestedURLs: [URL] {
-            messages.map { $0.url }
-        }
-        
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> ()) -> HTTPClientTask {
-            messages.append((url, completion))
-            return Task()
-        }
-        
-        func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(.failure(error))
-        }
-        
-        func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
-            let response = HTTPURLResponse(
-                url: requestedURLs[index],
-                statusCode: code,
-                httpVersion: nil,
-                headerFields: nil
-            )!
-            
-            messages[index].completion(.success((response, data)))
-        }
     }
 }
