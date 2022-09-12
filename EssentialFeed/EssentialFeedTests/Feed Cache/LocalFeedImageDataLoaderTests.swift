@@ -28,7 +28,7 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         expect(sut, toReceive: failure(.failed)) {
-            store.completeWithError(anyNSError())
+            store.completeRetrievalWithError(anyNSError())
         }
     }
     
@@ -36,7 +36,7 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         expect(sut, toReceive: failure(.notFound)) {
-            store.completeWith(nil)
+            store.completeRetrievalWith(nil)
         }
     }
     
@@ -45,7 +45,7 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         let imageData = anyData()
         
         expect(sut, toReceive: .success(imageData)) {
-            store.completeWith(imageData)
+            store.completeRetrievalWith(imageData)
         }
     }
     
@@ -59,9 +59,9 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         }
         task.cancel()
         
-        store.completeWith(.none)
-        store.completeWith(imageData)
-        store.completeWithError(anyNSError())
+        store.completeRetrievalWith(.none)
+        store.completeRetrievalWith(imageData)
+        store.completeRetrievalWithError(anyNSError())
         
         XCTAssertTrue(receivedResults.isEmpty)
     }
@@ -78,9 +78,9 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         
         sut = nil
         
-        store.completeWith(.none)
-        store.completeWith(imageData)
-        store.completeWithError(anyNSError())
+        store.completeRetrievalWith(.none)
+        store.completeRetrievalWith(imageData)
+        store.completeRetrievalWithError(anyNSError())
         
         XCTAssertTrue(receivedResults.isEmpty)
     }
@@ -90,7 +90,7 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         let imageData = anyData()
         let url = anyURL()
         
-        _ = sut.save(image: imageData, for: url) { _ in }
+        sut.save(image: imageData, for: url) { _ in }
         
         XCTAssertEqual(store.messages, [.insert(data: imageData, for: url)])
     }
@@ -132,13 +132,13 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func failure(_ error: LocalFeedImageDataLoader.Error) -> FeedImageDataLoader.Result {
+    private func failure(_ error: LocalFeedImageDataLoader.LoadError) -> FeedImageDataLoader.Result {
         .failure(error)
     }
     
     private class StoreSpy: FeedImageDataStore {
         private(set) var messages = [Message]()
-        private var retrieveCompletions = [(FeedImageDataStore.Result) -> Void]()
+        private var retrieveCompletions = [(FeedImageDataStore.RetrievalResult) -> Void]()
         private var saveCompletions = [(FeedImageDataStore.InsertionResult) -> Void]()
         
         enum Message: Equatable {
@@ -151,16 +151,16 @@ class LocalFeedImageDataLoaderTests: XCTestCase {
             saveCompletions.append(completion)
         }
         
-        func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.Result) -> Void) {
+        func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
             messages.append(.retrieve(dataFor: url))
             retrieveCompletions.append(completion)
         }
         
-        func completeWithError(_ error: Error, at index: Int = 0) {
+        func completeRetrievalWithError(_ error: Error, at index: Int = 0) {
             retrieveCompletions[index](.failure(error))
         }
         
-        func completeWith(_ data: Data?, at index: Int = 0) {
+        func completeRetrievalWith(_ data: Data?, at index: Int = 0) {
             retrieveCompletions[index](.success(data))
         }
     }
