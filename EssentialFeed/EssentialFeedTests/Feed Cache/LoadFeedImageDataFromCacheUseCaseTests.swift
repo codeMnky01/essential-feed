@@ -67,7 +67,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     }
     
     func test_loadImageDataFromURL_doesNotDeliverResultAfterInstanceHasBeenDeallocated() {
-        let store = StoreSpy()
+        let store = FeedImageDataStoreSpy()
         var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
         let imageData = anyData()
         
@@ -97,8 +97,8 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(currentDate: @escaping (() -> Date) = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedImageDataLoader, store: StoreSpy) {
-        let store = StoreSpy()
+    private func makeSUT(currentDate: @escaping (() -> Date) = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedImageDataLoader, store: FeedImageDataStoreSpy) {
+        let store = FeedImageDataStoreSpy()
         let sut = LocalFeedImageDataLoader(store: store)
         
         trackMemoryLeaks(instance: store, file: file, line: line)
@@ -134,34 +134,5 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     
     private func failure(_ error: LocalFeedImageDataLoader.LoadError) -> FeedImageDataLoader.Result {
         .failure(error)
-    }
-    
-    private class StoreSpy: FeedImageDataStore {
-        private(set) var messages = [Message]()
-        private var retrieveCompletions = [(FeedImageDataStore.RetrievalResult) -> Void]()
-        private var saveCompletions = [(FeedImageDataStore.InsertionResult) -> Void]()
-        
-        enum Message: Equatable {
-            case insert(data: Data, for: URL)
-            case retrieve(dataFor: URL)
-        }
-        
-        func insert(data: Data, forURL url: URL, completion: @escaping (InsertionResult) -> Void) {
-            messages.append(.insert(data: data, for: url))
-            saveCompletions.append(completion)
-        }
-        
-        func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
-            messages.append(.retrieve(dataFor: url))
-            retrieveCompletions.append(completion)
-        }
-        
-        func completeRetrievalWithError(_ error: Error, at index: Int = 0) {
-            retrieveCompletions[index](.failure(error))
-        }
-        
-        func completeRetrievalWith(_ data: Data?, at index: Int = 0) {
-            retrieveCompletions[index](.success(data))
-        }
     }
 }
