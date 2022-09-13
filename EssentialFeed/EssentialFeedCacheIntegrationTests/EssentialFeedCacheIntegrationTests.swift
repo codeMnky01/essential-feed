@@ -21,48 +21,50 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
         undoStoreSideEffects()
     }
     
-    func test_load_deliversNoItemsOnEmptyCache() {
-        let sut = makeFeedLoader()
+    // MARK: - LocalFeedLoader Tests
+    
+    func test_loadFeed_deliversNoItemsOnEmptyCache() {
+        let feedLoader = makeFeedLoader()
         
-        expect(sut, toLoad: [])
+        expect(feedLoader, toLoad: [])
     }
     
-    func test_load_deliversItemsSavedOnASeparateInstance() {
-        let sutToPerformSave = makeFeedLoader()
-        let sutToPerformLoad = makeFeedLoader()
+    func test_loadFeed_deliversItemsSavedOnASeparateInstance() {
+        let feedLoaderToPerformSave = makeFeedLoader()
+        let feedLoaderToPerformLoad = makeFeedLoader()
         let savedItems = uniqueImageFeed().models
         
-        save(savedItems, with: sutToPerformSave)
+        save(savedItems, with: feedLoaderToPerformSave)
         
-        expect(sutToPerformLoad, toLoad: savedItems)
+        expect(feedLoaderToPerformLoad, toLoad: savedItems)
     }
     
-    func test_save_overridesItemsSavedOnASeparateInstance() {
-        let sutToPerformFirstSave = makeFeedLoader()
-        let sutToPerformLastSave = makeFeedLoader()
-        let sutToPerformLoad = makeFeedLoader()
+    func test_saveFeed_overridesItemsSavedOnASeparateInstance() {
+        let feedLoaderToPerformFirstSave = makeFeedLoader()
+        let feedLoaderToPerformLastSave = makeFeedLoader()
+        let feedLoaderToPerformLoad = makeFeedLoader()
         let firstSavedItems = uniqueImageFeed().models
         let lastSavedItems = uniqueImageFeed().models
         
-        save(firstSavedItems, with: sutToPerformFirstSave)
-        save(lastSavedItems, with: sutToPerformLastSave)
+        save(firstSavedItems, with: feedLoaderToPerformFirstSave)
+        save(lastSavedItems, with: feedLoaderToPerformLastSave)
         
-        expect(sutToPerformLoad, toLoad: lastSavedItems)
+        expect(feedLoaderToPerformLoad, toLoad: lastSavedItems)
     }
     
-    // MARK: - LocalFeedImageDataLoaderTests
+    // MARK: - LocalFeedImageDataLoader Tests
     
     func test_loadImageData_deliversSavedDataOnASeparateInstance() {
-        let firstSut = makeImageLoader()
-        let lastSut = makeImageLoader()
+        let firstImageLoader = makeImageLoader()
+        let lastImageLoader = makeImageLoader()
         let feedLoader = makeFeedLoader()
         let image = uniqueImage()
         let dataToSave = anyData()
         
         save([image], with: feedLoader)
-        save(dataToSave, for: image.url, with: firstSut)
+        save(dataToSave, for: image.url, with: firstImageLoader)
         
-        expect(lastSut, toLoad: dataToSave, for: image.url)
+        expect(lastImageLoader, toLoad: dataToSave, for: image.url)
     }
     
     // MARK: - Helpers
