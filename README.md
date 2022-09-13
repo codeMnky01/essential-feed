@@ -134,7 +134,7 @@ So i can always enjoy cached images while offline
 1. System delivers retrieval error
 
 ##### Empty cache course (sad path):
-1. System delivers no image
+1. System delivers not found error
 
 
 ## Validate Feed Cache - Use Case
