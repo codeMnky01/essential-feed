@@ -69,6 +69,25 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve, .delete])
     }
     
+    func test_validateCache_failsOnDeletionErrorOfFailedRetrieval() {
+        let (sut, store) = makeSUT()
+        let deletionError = anyNSError()
+
+        expect(sut, toCompleteWith: .failure(deletionError)) {
+            store.completeRetrieval(with: anyNSError())
+            store.completeDeletion(with: deletionError)
+        }
+    }
+    
+    func test_validateCache_succeedsOnDeletionSuccessOfFailedRetrieval() {
+        let (sut, store) = makeSUT()
+
+        expect(sut, toCompleteWith: .success(())) {
+            store.completeRetrieval(with: anyNSError())
+            store.completeDeletionSuccessfully()
+        }
+    }
+    
     func test_validateCache_doesNotDeletesCacheAfterSUTInstanceHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
@@ -90,5 +109,28 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
         trackMemoryLeaks(instance: sut, file: file, line: line)
         
         return (sut, store)
+    }
+    
+    private func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: LocalFeedLoader.ValidationResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.validateCache { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case (.success, .success):
+                break
+                
+            case (let .failure(receivedError as NSError), let .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError)
+                
+            default:
+                XCTFail("Expect \(expectedResult), got \(receivedResult) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
     }
 }
