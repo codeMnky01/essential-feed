@@ -18,6 +18,7 @@
 		5571BD2728D3812E00389A6A /* FeedLoaderWithFallbackCompositeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5571BD2628D3812E00389A6A /* FeedLoaderWithFallbackCompositeTests.swift */; };
 		5571BD2928D38B4400389A6A /* FeedLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5571BD2828D38B4400389A6A /* FeedLoaderWithFallbackComposite.swift */; };
 		5571BD2B28D38BB000389A6A /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5571BD2A28D38BB000389A6A /* FeedImageDataLoaderWithFallbackCompositeTests.swift */; };
+		5571BD2D28D3978F00389A6A /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5571BD2C28D3978F00389A6A /* FeedImageDataLoaderWithFallbackComposite.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		5571BD2628D3812E00389A6A /* FeedLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
 		5571BD2828D38B4400389A6A /* FeedLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
 		5571BD2A28D38BB000389A6A /* FeedImageDataLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
+		5571BD2C28D3978F00389A6A /* FeedImageDataLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				557037FA28D0FD4C001D519F /* LaunchScreen.storyboard */,
 				557037FD28D0FD4C001D519F /* Info.plist */,
 				5571BD2828D38B4400389A6A /* FeedLoaderWithFallbackComposite.swift */,
+				5571BD2C28D3978F00389A6A /* FeedImageDataLoaderWithFallbackComposite.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5571BD2D28D3978F00389A6A /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */,
 				557037F028D0FD4B001D519F /* AppDelegate.swift in Sources */,
 				5571BD2928D38B4400389A6A /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				557037F228D0FD4B001D519F /* SceneDelegate.swift in Sources */,
