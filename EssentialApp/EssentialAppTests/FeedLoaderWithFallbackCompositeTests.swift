@@ -10,13 +10,22 @@ import EssentialFeed
 
 class FeedLoaderWithFallbackComposite: FeedLoader {
     private let primary: FeedLoader
+    private let fallback: FeedLoader
     
     init(primary: FeedLoader, fallback: FeedLoader) {
         self.primary = primary
+        self.fallback = fallback
     }
     
     func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        primary.load(completion: completion)
+        primary.load { [weak self] result in
+            switch result {
+            case .success:
+                completion(result)
+            case .failure:
+                self?.fallback.load(completion: completion)
+            }
+        }
     }
 }
 
@@ -32,6 +41,27 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
             switch receivedResult {
             case let .success(receivedFeed):
                 XCTAssertEqual(primaryFeed, receivedFeed)
+                
+            default:
+                XCTFail("Expected successful feed load, got: \(receivedResult) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_load_deliversFallbackResultOnPrimaryFailure() {
+        let fallbackFeed = uniqueImageFeed()
+        
+        let sut = makeSUT(with: .failure(anyNSError()), fallbackResult: .success(fallbackFeed))
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.load { receivedResult in
+            switch receivedResult {
+            case let .success(receivedFeed):
+                XCTAssertEqual(fallbackFeed, receivedFeed)
                 
             default:
                 XCTFail("Expected successful feed load, got: \(receivedResult) instead")
@@ -72,6 +102,10 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
     
     private func uniqueImageFeed() -> [FeedImage] {
         [uniqueImage(), uniqueImage(), uniqueImage(), uniqueImage()]
+    }
+    
+    private func anyNSError() -> NSError {
+        NSError(domain: "domain", code: 100)
     }
     
     private class LoaderStub: FeedLoader {
