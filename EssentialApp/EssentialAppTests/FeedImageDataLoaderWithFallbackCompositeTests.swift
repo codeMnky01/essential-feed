@@ -27,8 +27,14 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> EssentialFeed.FeedImageDataLoaderTask {
         let task = WrappedTask()
-        task.wrapped = primary.loadImageData(from: url) { result in
-            
+        task.wrapped = primary.loadImageData(from: url) { [weak self] result in
+            switch result {
+            case .success:
+                completion(result)
+                
+            case .failure:
+                task.wrapped = self?.fallback.loadImageData(from: url, completion: completion)
+            }
         }
         return task
     }
@@ -62,6 +68,18 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         
         XCTAssertEqual(primary.cancelledURLs, [url])
         XCTAssertEqual(fallback.cancelledURLs, [])
+    }
+    
+    func test_load_cancelsFallbackLoaderTaskOnPrimaryFailureAndCancel() {
+        let (sut, primary, fallback) = makeSUT()
+        let url = anyURL()
+        
+        let task = sut.loadImageData(from: url) { _ in }
+        primary.completeWithError(anyNSError())
+        task.cancel()
+        
+        XCTAssertEqual(primary.cancelledURLs, [])
+        XCTAssertEqual(fallback.cancelledURLs, [url])
     }
     
     // MARK: - Helpers
@@ -114,6 +132,10 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> EssentialFeed.FeedImageDataLoaderTask {
             messages.append((url, completion))
             return Task { [weak self] in self?.cancelledURLs.append(url) }
+        }
+        
+        func completeWithError(_ error: Error, at index: Int = 0) {
+            messages[index].completion(.failure(error))
         }
     }
 }
