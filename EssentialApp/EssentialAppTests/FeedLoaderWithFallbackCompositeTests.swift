@@ -67,18 +67,6 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func uniqueImage() -> FeedImage {
-        FeedImage(id: UUID(), description: "description", location: "location", url: URL(string: "https://url.com")!)
-    }
-    
-    private func uniqueImageFeed() -> [FeedImage] {
-        [uniqueImage(), uniqueImage(), uniqueImage(), uniqueImage()]
-    }
-    
-    private func anyNSError() -> NSError {
-        NSError(domain: "domain", code: 100)
-    }
-    
     private class LoaderStub: FeedLoader {
         private let result: FeedLoader.Result
         
@@ -89,5 +77,13 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         func load(completion: @escaping (FeedLoader.Result) -> Void) {
             completion(result)
         }
+    }
+    
+    private func uniqueImage() -> FeedImage {
+        FeedImage(id: UUID(), description: "description", location: "location", url: URL(string: "https://url.com")!)
+    }
+
+    private func uniqueImageFeed() -> [FeedImage] {
+        [uniqueImage(), uniqueImage(), uniqueImage(), uniqueImage()]
     }
 }
