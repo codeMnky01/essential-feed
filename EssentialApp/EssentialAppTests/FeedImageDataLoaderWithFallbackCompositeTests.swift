@@ -90,6 +90,16 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             primary.completeWith(primaryData)
         }
     }
+    
+    func test_load_deliversFallbackDataOnPrimaryFailure() {
+        let (sut, primary, fallback) = makeSUT()
+        let fallbackData = Data("primary data".utf8)
+        
+        expect(sut, toCompleteWith: .success(fallbackData)) {
+            primary.completeWithError(anyNSError())
+            fallback.completeWith(fallbackData)
+        }
+    }
                            
     private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
