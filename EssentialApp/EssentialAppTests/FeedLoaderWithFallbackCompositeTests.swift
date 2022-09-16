@@ -52,13 +52,13 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         sut.load { receivedResult in
             switch (receivedResult, expectedResult) {
             case (let .success(receivedFeed), let .success(expectedFeed)):
-                XCTAssertEqual(receivedFeed, expectedFeed)
+                XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
                 
             case (let .failure(receivedError as NSError), let .failure(expectedError as NSError)):
-                XCTAssertEqual(receivedError, expectedError)
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
                 
             default:
-                XCTFail("Expected successful feed load, got: \(receivedResult) instead")
+                XCTFail("Expected successful feed load, got: \(receivedResult) instead", file: file, line: line)
             }
             
             exp.fulfill()
