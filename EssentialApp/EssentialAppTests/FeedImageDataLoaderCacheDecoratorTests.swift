@@ -1,99 +1,78 @@
 //
-//  FeedImageDataLoaderWithFallbackCompositeTests.swift
+//  FeedImageDataLoaderCacheDecoratorTests.swift
 //  EssentialAppTests
 //
-//  Created by Andrey on 9/15/22.
+//  Created by Andrey on 9/19/22.
 //
 
 import XCTest
 import EssentialFeed
-import EssentialApp
 
-class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
-    
-    func test_load_doesNotLoadDataOnInit() {
-        let (_, primary, fallback) = makeSUT()
-        
-        XCTAssertTrue(primary.loadedURLs.isEmpty)
-        XCTAssertTrue(fallback.loadedURLs.isEmpty)
+class FeedImageDataLoaderCacheDecorator: FeedImageDataLoader {
+    private let decoratee: FeedImageDataLoader
+
+    init(decoratee: FeedImageDataLoader) {
+        self.decoratee = decoratee
     }
     
-    func test_load_loadsFromPrimaryLoaderFirst() {
-        let (sut, primary, fallback) = makeSUT()
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> EssentialFeed.FeedImageDataLoaderTask {
+        decoratee.loadImageData(from: url, completion: completion)
+    }
+}
+
+class FeedImageDataLoaderCacheDecoratorTests: XCTestCase {
+    func test_load_doesNotLoadDataOnInit() {
+        let (_, loader) = makeSUT()
+        
+        XCTAssertTrue(loader.loadedURLs.isEmpty)
+    }
+    
+    func test_load_loadsFromLoader() {
+        let (sut, loader) = makeSUT()
         let url = anyURL()
         
         _ = sut.loadImageData(from: url) { _ in }
         
-        XCTAssertEqual(primary.loadedURLs, [anyURL()])
-        XCTAssertTrue(fallback.loadedURLs.isEmpty)
+        XCTAssertEqual(loader.loadedURLs, [anyURL()])
     }
     
-    func test_load_cancelsPrimaryLoaderTaskOnCancel() {
-        let (sut, primary, fallback) = makeSUT()
+    func test_load_cancelsLoaderTaskOnCancel() {
+        let (sut, loader) = makeSUT()
         let url = anyURL()
         
         let task = sut.loadImageData(from: url) { _ in }
         task.cancel()
         
-        XCTAssertEqual(primary.cancelledURLs, [url])
-        XCTAssertEqual(fallback.cancelledURLs, [])
+        XCTAssertEqual(loader.cancelledURLs, [url])
     }
     
-    func test_load_cancelsFallbackLoaderTaskOnPrimaryFailureAndCancel() {
-        let (sut, primary, fallback) = makeSUT()
-        let url = anyURL()
+    func test_load_deliversDataOnLoaderSuccess() {
+        let (sut, loader) = makeSUT()
+        let data = Data("any data".utf8)
         
-        let task = sut.loadImageData(from: url) { _ in }
-        primary.completeWithError(anyNSError())
-        task.cancel()
-        
-        XCTAssertEqual(primary.cancelledURLs, [])
-        XCTAssertEqual(fallback.cancelledURLs, [url])
-    }
-    
-    func test_load_deliversPrimaryDataOnPrimarySuccess() {
-        let (sut, primary, _) = makeSUT()
-        let primaryData = Data("primary data".utf8)
-        
-        expect(sut, toCompleteWith: .success(primaryData)) {
-            primary.completeWith(primaryData)
+        expect(sut, toCompleteWith: .success(data)) {
+            loader.completeWith(data)
         }
     }
     
-    func test_load_deliversFallbackDataOnPrimaryFailure() {
-        let (sut, primary, fallback) = makeSUT()
-        let fallbackData = Data("primary data".utf8)
-        
-        expect(sut, toCompleteWith: .success(fallbackData)) {
-            primary.completeWithError(anyNSError())
-            fallback.completeWith(fallbackData)
-        }
-    }
-    
-    func test_load_deliversErrorOnBothPrimaryAndFallbackFailure() {
-        let (sut, primary, fallback) = makeSUT()
+    func test_load_deliversErrorOnLoaderFailure() {
+        let (sut, loader) = makeSUT()
         
         expect(sut, toCompleteWith: .failure(anyNSError())) {
-            primary.completeWithError(anyNSError())
-            fallback.completeWithError(anyNSError())
+            loader.completeWithError(anyNSError())
         }
     }
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageDataLoader, LoaderSpy, LoaderSpy) {
-        let primaryLoader = LoaderSpy()
-        let fallbackLoader = LoaderSpy()
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageDataLoader, LoaderSpy) {
+        let loader = LoaderSpy()
+        let sut = FeedImageDataLoaderCacheDecorator(decoratee: loader)
         
-        let sut = FeedImageDataLoaderWithFallbackComposite(
-            primary: primaryLoader,
-            fallback: fallbackLoader)
-        
-        trackMemoryLeaks(instance: primaryLoader, file: file, line: line)
-        trackMemoryLeaks(instance: fallbackLoader, file: file, line: line)
+        trackMemoryLeaks(instance: loader, file: file, line: line)
         trackMemoryLeaks(instance: sut, file: file, line: line)
         
-        return (sut, primaryLoader, fallbackLoader)
+        return (sut, loader)
     }
     
     private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
