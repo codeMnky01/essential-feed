@@ -14,10 +14,6 @@ import EssentialFeediOS
 
 class DebuggingSceneDelegate: SceneDelegate {
     override func makeRootViewController() -> UIViewController {
-        let storeURL = NSPersistentContainer
-            .defaultDirectoryURL()
-            .appendingPathComponent("feed-store.sqlite")
-
         if CommandLine.arguments.contains("-reset") {
             try? FileManager.default.removeItem(at: storeURL)
         }
