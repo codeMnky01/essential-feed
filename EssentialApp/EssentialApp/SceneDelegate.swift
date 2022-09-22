@@ -22,19 +22,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Helpers
     
-    private func makeRootViewController() -> UIViewController {
+    func makeRootViewController() -> UIViewController {
         let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
         
         let storeURL = NSPersistentContainer
             .defaultDirectoryURL()
             .appendingPathComponent("feed-store.sqlite")
         let store = try! CoreDataFeedStore(storeURL: storeURL)
-        
-#if DEBUG
-        if CommandLine.arguments.contains("-reset") {
-            try? FileManager.default.removeItem(at: storeURL)
-        }
-#endif
         
         let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
         let localImageLoader = LocalFeedImageDataLoader(store: store)
@@ -57,27 +51,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return vc
     }
     
-    private func makeRemoteClient() -> HTTPClient {
-#if DEBUG
-        if UserDefaults.standard.string(forKey: "connectivity") == "offline" {
-            return AlwaysFailingHTTPClient()
-        }
-#endif
-        
+    func makeRemoteClient() -> HTTPClient {
         let configuration = URLSessionConfiguration.ephemeral
         return URLSessionHTTPClient(session: URLSession(configuration: configuration))
     }
 }
-
-#if DEBUG
-private class AlwaysFailingHTTPClient: HTTPClient {
-    private class Task: HTTPClientTask {
-        func cancel() {}
-    }
-    
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> ()) -> EssentialFeed.HTTPClientTask {
-        completion(.failure(NSError(domain: "offline", code: 0)))
-        return Task()
-    }
-}
-#endif
