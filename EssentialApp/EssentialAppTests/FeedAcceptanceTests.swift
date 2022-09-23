@@ -12,7 +12,7 @@ import EssentialFeediOS
 
 class FeedAcceptanceTests: XCTestCase {
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
-        let store = InMemoryStore.empty
+        let store = InMemoryFeedStore.empty
         let client = HTTPClientStub.online(response)
         let feed = launch(with: store, client: client)
         
@@ -22,7 +22,7 @@ class FeedAcceptanceTests: XCTestCase {
     }
     
     func test_onLaunch_displaysCachedFeedWhenCustomerHasNoConnectivity() {
-        let sharedStore = InMemoryStore.empty
+        let sharedStore = InMemoryFeedStore.empty
         let onlineClient = HTTPClientStub.online(response)
         let onlineFeed = launch(with: sharedStore, client: onlineClient)
         
@@ -42,12 +42,27 @@ class FeedAcceptanceTests: XCTestCase {
         let feed = launch(with: .empty, client: .offline)
         
         XCTAssertEqual(feed.numberOfRenderedFeedImageViews, 0)
-
+    }
+    
+    func test_onEnteringBackground_deletesExpiredCache() {
+        let store = InMemoryFeedStore.withExpiredCache
+        
+        enterBackground(with: store)
+        
+        XCTAssertNil(store.feedCache)
+    }
+    
+    func test_onEnteringBackground_keepsNonExpiredCache() {
+        let store = InMemoryFeedStore.withNonExpiredCache
+        
+        enterBackground(with: store)
+        
+        XCTAssertNotNil(store.feedCache)
     }
     
     // MARK: - Helpers
     
-    private func launch(with store: InMemoryStore, client: HTTPClientStub) -> FeedViewController {
+    private func launch(with store: InMemoryFeedStore, client: HTTPClientStub = .offline) -> FeedViewController {
         let sut = SceneDelegate(store: store, httpClient: client)
         
         sut.window = UIWindow()
@@ -57,12 +72,29 @@ class FeedAcceptanceTests: XCTestCase {
         return nav?.topViewController as! FeedViewController
     }
     
-    private class InMemoryStore: FeedStore, FeedImageDataStore {
-        private var feedCache: CachedFeed?
+    private func enterBackground(with store: InMemoryFeedStore) {
+        let sut = SceneDelegate(store: store, httpClient: HTTPClientStub.offline)
+        sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
+    }
+    
+    private class InMemoryFeedStore: FeedStore, FeedImageDataStore {
+        private(set) var feedCache: CachedFeed?
         private var feedImageDataCache = [URL: Data]()
         
-        static var empty: InMemoryStore {
-            InMemoryStore()
+        static var empty: InMemoryFeedStore {
+            InMemoryFeedStore()
+        }
+        
+        static var withExpiredCache: InMemoryFeedStore {
+            let store = InMemoryFeedStore()
+            store.feedCache = ([], Date.distantPast)
+            return store
+        }
+        
+        static var withNonExpiredCache: InMemoryFeedStore {
+            let store = InMemoryFeedStore()
+            store.feedCache = ([], Date())
+            return store
         }
         
         func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
