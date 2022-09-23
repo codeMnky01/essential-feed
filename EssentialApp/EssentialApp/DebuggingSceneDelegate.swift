@@ -13,12 +13,12 @@ import EssentialFeed
 import EssentialFeediOS
 
 class DebuggingSceneDelegate: SceneDelegate {
-    override func makeRootViewController() -> UIViewController {
+    override func configureWindow() {
         if CommandLine.arguments.contains("-reset") {
             try? FileManager.default.removeItem(at: storeURL)
         }
         
-        return super.makeRootViewController()
+        super.configureWindow()
     }
     
     override func makeRemoteClient() -> HTTPClient {
