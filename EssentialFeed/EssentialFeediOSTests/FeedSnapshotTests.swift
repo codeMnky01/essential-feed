@@ -26,6 +26,14 @@ class FeedSnapshotTests: XCTestCase {
         record(sut.snapshot(), name: "FEED_WITH_CONTENT")
     }
     
+    func test_feedWithErrorMessage() {
+        let sut = makeSUT()
+         
+        sut.display(.error(message: "This is a \nmulti-line\n error message"))
+        
+        record(sut.snapshot(), name: "FEED_WITH_ERROR_MESSAGE")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> FeedViewController {
