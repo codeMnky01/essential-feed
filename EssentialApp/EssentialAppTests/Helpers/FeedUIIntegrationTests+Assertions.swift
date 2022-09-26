@@ -11,8 +11,7 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
     func assertThat(_ sut: FeedViewController, isRendering images: [FeedImage], file: StaticString = #filePath, line: UInt = #line) {
-        sut.tableView.layoutIfNeeded()
-        RunLoop.main.run(until: Date())
+        sut.view.enforceLayoutCycle()
         
         guard sut.numberOfRenderedFeedImageViews == images.count else {
             XCTFail("Expected to render same amount views (\(sut.numberOfRenderedFeedImageViews)) as loaded (\(images.count))", file: file, line: line)
@@ -22,6 +21,8 @@ extension FeedUIIntegrationTests {
         images.enumerated().forEach { (index, image) in
             assertThat(sut, hasViewConfiguredAt: index, with: image)
         }
+        
+        executeRunLoopToCleanUpReferences()
     }
 
     func assertThat(_ sut: FeedViewController, hasViewConfiguredAt index: Int, with image: FeedImage, file: StaticString = #filePath, line: UInt = #line) {
@@ -34,5 +35,9 @@ extension FeedUIIntegrationTests {
         XCTAssertEqual(cell.isShowingLocation, image.location != nil, file: file, line: line)
         XCTAssertEqual(cell.locationText, image.location, file: file, line: line)
         XCTAssertEqual(cell.descriptionText, image.description, file: file, line: line)
+    }
+    
+    private func executeRunLoopToCleanUpReferences() {
+        RunLoop.current.run(until: Date())
     }
 }
