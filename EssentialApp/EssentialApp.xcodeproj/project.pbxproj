@@ -37,6 +37,7 @@
 		55AB1C6D28DDE9E9006D3AB7 /* FeedAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AB1C6C28DDE9E9006D3AB7 /* FeedAcceptanceTests.swift */; };
 		55AB1C6F28DDFB10006D3AB7 /* InMemoryFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AB1C6E28DDFB10006D3AB7 /* InMemoryFeedStore.swift */; };
 		55AB1C7128DDFB36006D3AB7 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AB1C7028DDFB36006D3AB7 /* HTTPClientStub.swift */; };
+		55B7BEE228EC5C5F0073850C /* CombineHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B7BEE128EC5C5F0073850C /* CombineHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		55AB1C6C28DDE9E9006D3AB7 /* FeedAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedAcceptanceTests.swift; sourceTree = "<group>"; };
 		55AB1C6E28DDFB10006D3AB7 /* InMemoryFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFeedStore.swift; sourceTree = "<group>"; };
 		55AB1C7028DDFB36006D3AB7 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
+		55B7BEE128EC5C5F0073850C /* CombineHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 				55AB1C5028DDE57F006D3AB7 /* FeedImageDataLoaderPresentationAdapter.swift */,
 				55AB1C4F28DDE57F006D3AB7 /* WeakRefVirtualProxy.swift */,
 				55AB1C5128DDE57F006D3AB7 /* FeedViewAdapter.swift */,
+				55B7BEE128EC5C5F0073850C /* CombineHelpers.swift */,
 				557037F828D0FD4C001D519F /* Assets.xcassets */,
 				557037FA28D0FD4C001D519F /* LaunchScreen.storyboard */,
 				557037FD28D0FD4C001D519F /* Info.plist */,
@@ -304,6 +307,7 @@
 				55AB1C5328DDE57F006D3AB7 /* FeedLoaderPresentationAdapter.swift in Sources */,
 				557037F228D0FD4B001D519F /* SceneDelegate.swift in Sources */,
 				55AB1C5728DDE57F006D3AB7 /* FeedViewAdapter.swift in Sources */,
+				55B7BEE228EC5C5F0073850C /* CombineHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
