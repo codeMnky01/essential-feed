@@ -24,11 +24,9 @@ class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
         
         cancellable = feedLoader().sink(
             receiveCompletion: { [weak self] completion in
-                print("======", completion)
                 switch completion {
                 case .finished: break
                 case let .failure(error):
-                    print("=============", error)
                     self?.feedPresenter?.didFinishLoadingFeed(with: error)
                 }
             },
