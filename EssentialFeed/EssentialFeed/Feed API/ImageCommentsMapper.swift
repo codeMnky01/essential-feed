@@ -14,12 +14,16 @@ final class ImageCommentsMapper {
     
     static func map(response: HTTPURLResponse, data: Data) throws -> [RemoteFeedItem] {
         guard
-            response.isOK,
+            isOK(response: response),
             let root = try? JSONDecoder().decode(Root.self, from: data)
         else {
             throw RemoteImageCommentsLoader.Error.invalidData
         }
         
         return root.items
+    }
+    
+    static func isOK(response: HTTPURLResponse) -> Bool {
+        (200...299).contains(response.statusCode)
     }
 }
